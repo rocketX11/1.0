@@ -3074,7 +3074,7 @@
         }
 
         // ============================================================
-        //  🎮 GAME ENGINE (unchanged)
+        //  🎮 GAME ENGINE (with forced crash fix)
         // ============================================================
         function startRoundSync() {
             const roundRef = getRoundRef();
@@ -3321,6 +3321,9 @@
             }, 45);
         }
 
+        // ============================================================
+        //  🔥 FIXED: triggerCrash() – remove forcedCrash after crash
+        // ============================================================
         function triggerCrash() {
             currentGameState = "CRASHED";
             document.getElementById('mult-txt').innerText = "FLEW AWAY";
@@ -3334,10 +3337,12 @@
             addCrashToHistory(targetCrashPoint);
             syncWalletDatabase();
 
+            // 🔥 FIX: Clear forcedCrash so it doesn't repeat
             getRoundRef().update({
                 state: 'CRASHED',
                 crashPoint: targetCrashPoint,
-                multiplier: targetCrashPoint
+                multiplier: targetCrashPoint,
+                forcedCrash: null  // <-- এই লাইনটি যোগ করা হয়েছে
             });
 
             betsData[1] = { activeAmount: 0, hasBet: false, hasCashedOut: false, cashoutMult: 1.00, currentValue: 0,
@@ -4198,7 +4203,7 @@
             });
         });
 
-        console.log("🚀 Rocket X Player Edition – Withdraw auto-deduct fixed.");
+        console.log("🚀 Rocket X Player Edition – Forced crash fix applied.");
     </script>
 </body>
 </html>
