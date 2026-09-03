@@ -9,8 +9,10 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
+    </script>
     <style>
-        /* ====== BASE (unchanged, same as your code) ====== */
+        /* ====== BASE (unchanged) ====== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -725,6 +727,115 @@
                 background-position: 300% 0%;
             }
         }
+
+        /* ====== TURNOVER TASKS BAR ====== */
+        .turnover-tasks-bar {
+            background: rgba(10, 15, 30, 0.85);
+            padding: 4px 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.12);
+            border-top: 1px solid rgba(255, 215, 0, 0.06);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .turnover-tasks-bar.active {
+            display: flex;
+        }
+        .turnover-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 215, 0, 0.04);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 9px;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .turnover-task-item .task-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .turnover-task-item .task-info .task-amount {
+            color: #ffcc00;
+            font-weight: 800;
+            font-size: 10px;
+        }
+        .turnover-task-item .task-info .task-progress {
+            flex: 1;
+            min-width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .turnover-task-item .task-info .task-progress .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff87, #ffcc00);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .turnover-task-item .task-timer {
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #4facfe;
+            min-width: 60px;
+            text-align: right;
+        }
+        .turnover-task-item .task-timer.urgent {
+            color: #ff1f5a;
+            animation: pulseText 0.6s infinite alternate;
+        }
+        .turnover-task-item .task-timer.completed {
+            color: #00ff87;
+        }
+        .turnover-task-item .task-timer.expired {
+            color: #64748b;
+            text-decoration: line-through;
+        }
+        .turnover-task-item .task-status-badge {
+            font-size: 7px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .turnover-task-item .task-status-badge.active {
+            background: rgba(0, 255, 135, 0.12);
+            color: #00ff87;
+            border: 1px solid rgba(0, 255, 135, 0.2);
+        }
+        .turnover-task-item .task-status-badge.completed {
+            background: rgba(0, 255, 135, 0.12);
+            color: #00ff87;
+            border: 1px solid rgba(0, 255, 135, 0.2);
+        }
+        .turnover-task-item .task-status-badge.expired {
+            background: rgba(255, 31, 90, 0.12);
+            color: #ff1f5a;
+            border: 1px solid rgba(255, 31, 90, 0.2);
+        }
+        /* 🔥 ডিলিট বাটন সম্পূর্ণ রিমুভ করা হয়েছে – শুধু এডমিন প্যানেলেই থাকবে */
+        /* .task-delete-btn সরিয়ে দেওয়া হয়েছে */
+
+        .turnover-task-item .task-remaining {
+            color: #94a3b8;
+            font-size: 8px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        /* ====== LIVE BETS ====== */
         .live-bets-bottom {
             flex: 1;
             background: #010206;
@@ -896,7 +1007,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ====== MODALS (unchanged) ====== */
+        /* ====== MODALS ====== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1725,6 +1836,123 @@
                 font-size: 7px;
                 padding: 2px 5px;
             }
+            .turnover-task-item {
+                font-size: 7px;
+                padding: 2px 4px;
+            }
+            .turnover-task-item .task-timer {
+                font-size: 9px;
+                min-width: 40px;
+            }
+            .turnover-task-item .task-info .task-amount {
+                font-size: 8px;
+            }
+            .turnover-task-item .task-remaining {
+                font-size: 7px;
+                min-width: 30px;
+            }
+            .account-task-item {
+                font-size: 7px !important;
+                padding: 2px 4px !important;
+            }
+            .account-task-item .task-timer {
+                font-size: 8px !important;
+                min-width: 40px !important;
+            }
+        }
+
+        /* ====== ACCOUNT TASKS STYLES (no delete button) ====== */
+        .account-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 215, 0, 0.04);
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 9px;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 3px;
+        }
+        .account-task-item .task-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 100px;
+        }
+        .account-task-item .task-info .task-amount {
+            color: #ffcc00;
+            font-weight: 800;
+            font-size: 9px;
+        }
+        .account-task-item .task-info .task-progress {
+            flex: 1;
+            min-width: 40px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .account-task-item .task-info .task-progress .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff87, #ffcc00);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .account-task-item .task-timer {
+            font-family: monospace;
+            font-size: 10px;
+            font-weight: 700;
+            color: #4facfe;
+            min-width: 50px;
+            text-align: right;
+        }
+        .account-task-item .task-timer.urgent {
+            color: #ff1f5a;
+            animation: pulseText 0.6s infinite alternate;
+        }
+        .account-task-item .task-timer.completed {
+            color: #00ff87;
+        }
+        .account-task-item .task-timer.expired {
+            color: #64748b;
+            text-decoration: line-through;
+        }
+        .account-task-item .task-status-badge {
+            font-size: 6px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .account-task-item .task-status-badge.active {
+            background: rgba(0, 255, 135, 0.12);
+            color: #00ff87;
+            border: 1px solid rgba(0, 255, 135, 0.2);
+        }
+        .account-task-item .task-status-badge.completed {
+            background: rgba(0, 255, 135, 0.12);
+            color: #00ff87;
+            border: 1px solid rgba(0, 255, 135, 0.2);
+        }
+        .account-task-item .task-status-badge.expired {
+            background: rgba(255, 31, 90, 0.12);
+            color: #ff1f5a;
+            border: 1px solid rgba(255, 31, 90, 0.2);
+        }
+        .account-tasks-container {
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+        .account-tasks-container .empty-msg {
+            color: #64748b;
+            font-size: 9px;
+            text-align: center;
+            padding: 6px 0;
         }
     </style>
 </head>
@@ -1887,6 +2115,15 @@
             </div>
         </div>
 
+        <!-- ====== TURNOVER TASKS BAR (ডিলিট বাটন সরানো হয়েছে) ====== -->
+        <div class="turnover-tasks-bar" id="turnoverTasksBar">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:8px; color:#ffcc00; font-weight:700; padding:2px 4px;">
+                <span><i class="fa-solid fa-hourglass-half"></i> Turnover Tasks</span>
+                <span style="font-size:7px; color:#64748b; font-weight:400;" id="tasks-count-label">0 active</span>
+            </div>
+            <div id="turnoverTasksList"></div>
+        </div>
+
         <!-- ACTIVE PLAYERS -->
         <div class="live-bets-bottom">
             <div class="bets-card-container">
@@ -1914,7 +2151,7 @@
     </div>
 
     <!-- ====== MODALS ====== -->
-    <!-- My Account -->
+    <!-- My Account (এখানে ডিলিট বাটন নেই) -->
     <div class="modal-overlay" id="my-account-modal">
         <div class="modal-body" style="text-align:left;">
             <h3 style="color:#00ff87; text-align:center; margin-bottom:12px;"><i class="fa-solid fa-user-gear"></i> My Account</h3>
@@ -1960,6 +2197,18 @@
                 </div>
             </div>
 
+            <!-- ====== TURNOVER TASKS (in account modal – no delete) ====== -->
+            <div style="margin-top:10px;">
+                <div style="font-size:10px; font-weight:800; color:#f59e0b; display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,215,0,0.1); padding-bottom:3px;">
+                    <span><i class="fa-solid fa-clock"></i> Turnover Tasks</span>
+                    <span style="font-size:8px; color:#64748b;" id="account-task-count">0</span>
+                </div>
+                <div class="account-tasks-container" id="accountTasksList">
+                    <div class="empty-msg">No tasks assigned.</div>
+                </div>
+            </div>
+
+            <!-- Regular Turnover Panel -->
             <div class="turnover-panel" id="turnover-panel">
                 <h4><span><i class="fa-solid fa-rotate"></i> Turn Over</span><span id="turnover-percent">0%</span></h4>
                 <div class="turnover-stats"><span>Required: ৳ <span id="turnover-required">0</span></span><span>Completed: ৳ <span id="turnover-completed">0</span></span><span>Remaining: ৳ <span id="turnover-remaining">0</span></span></div>
@@ -2100,16 +2349,6 @@
         const db = firebase.database();
 
         // ============================================================
-        //  🔥 FIXED: Notification path cleanup (remove # from userId)
-        // ============================================================
-        function getNotificationsRef(userId) {
-            if (!userId) return null;
-            const clean = userId.replace('#', '');
-            if (!clean) return null;
-            return db.ref('notifications/' + clean);
-        }
-
-        // ============================================================
         //  HELPERS & STATE
         // ============================================================
         const $ = id => document.getElementById(id);
@@ -2123,6 +2362,7 @@
         };
         const getChatRef = () => db.ref('chatMessages');
         const getOnlineRef = () => db.ref('online');
+        const getTurnoverTasksRef = (username) => db.ref('users/' + username + '/turnoverTasks');
 
         // Sound settings
         let soundSettings = {
@@ -2160,20 +2400,28 @@
             window._soundDD = setTimeout(() => { dd.style.display = 'none'; }, 5000);
         }
 
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        // ====== FIXED: USE CryptoJS FOR HASHING ======
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
         }
 
         function fetchAllUsers() {
+            console.log('🔄 Fetching all users from Firebase...');
             return getUsersRef().once('value').then(snap => {
                 const data = snap.val();
-                if (!data) return [];
-                return Object.values(data).filter(u => u && typeof u === 'object' && u.username && u.username.trim()
+                console.log('📦 Raw users data:', data);
+                if (!data) {
+                    console.warn('⚠️ No users found in Firebase.');
+                    return [];
+                }
+                const users = Object.values(data).filter(u => u && typeof u === 'object' && u.username && u.username.trim()
                     .length > 0);
+                console.log('✅ Users loaded:', users.length);
+                return users;
+            }).catch(err => {
+                console.error('❌ Error fetching users:', err);
+                showToast('Could not connect to database. Check your internet and Firebase rules.', 'error');
+                return [];
             });
         }
 
@@ -2228,7 +2476,7 @@
                     errBox.style.display = 'block';
                     return;
                 }
-                const hashedPass = await hashPassword(pass);
+                const hashedPass = hashPassword(pass);
                 let bal = ref === "REF123" ? 100.00 : 0;
                 let userId = "#" + Math.floor(Math.random() * 89999 + 10000);
                 const newUser = {
@@ -2241,12 +2489,14 @@
                     withdrawHistory: [],
                     turnoverRequired: 0,
                     turnoverCompleted: 0,
+                    turnoverTasks: {},
                     avatar: null,
                     registeredAt: new Date().toISOString(),
                     stats: { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0, biggestWin: 0, winRate: 0 },
                     betHistory: []
                 };
                 await getUserRef(user).set(newUser);
+                // Update local cache
                 let users = existing;
                 users.push(newUser);
                 localStorage.setItem('rocket_users', JSON.stringify(users));
@@ -2258,7 +2508,7 @@
             } catch (e) {
                 errBox.innerText = '⚠️ Registration failed. Please try again.';
                 errBox.style.display = 'block';
-                console.error(e);
+                console.error('Registration error:', e);
             }
         }
 
@@ -2275,8 +2525,15 @@
                 return;
             }
             try {
+                console.log('🔐 Attempting login with:', userVal);
                 let users = await fetchAllUsers();
-                const hashedInput = await hashPassword(passVal);
+                if (users.length === 0) {
+                    errBox.innerText = '⚠️ No users found. Please register first.';
+                    errBox.style.display = 'block';
+                    return;
+                }
+                const hashedInput = hashPassword(passVal);
+                console.log('🔑 Hashed input password:', hashedInput);
                 let account = users.find(u =>
                     (u.username === userVal || u.phone === userVal) &&
                     u.password === hashedInput
@@ -2284,8 +2541,10 @@
                 if (!account) {
                     errBox.innerText = '❌ Wrong username/phone or password!';
                     errBox.style.display = 'block';
+                    console.warn('❌ No matching account found.');
                     return;
                 }
+                console.log('✅ Login successful for:', account.username);
                 if (!account.userId) {
                     account.userId = "#" + Math.floor(Math.random() * 89999 + 10000);
                     await getUserRef(account.username).update({ userId: account.userId });
@@ -2297,6 +2556,7 @@
                 if (!account.stats) account.stats = { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0,
                     biggestWin: 0, winRate: 0 };
                 if (!account.betHistory) account.betHistory = [];
+                if (!account.turnoverTasks) account.turnoverTasks = {};
                 localStorage.setItem('rocket_session', JSON.stringify(account));
                 localStorage.setItem('rocket_users', JSON.stringify(users));
                 currentUser = account;
@@ -2304,7 +2564,7 @@
             } catch (e) {
                 errBox.innerText = '❌ Login error. Please try again.';
                 errBox.style.display = 'block';
-                console.error(e);
+                console.error('🔥 Login error:', e);
             }
         }
 
@@ -2342,8 +2602,9 @@
         const ADMIN_WHATSAPP_NUMBER = "8801404340016";
         const ACTUAL_PAYMENT_NUMBER = "01404340016";
 
-        // Chat state
         let chatInitialized = false;
+        let turnoverTasks = {};
+        let turnoverTaskTimers = {};
 
         function updateFakeBetBar(mult) {
             const el = document.getElementById('fakeBetAmount');
@@ -2373,6 +2634,7 @@
         }
 
         function bootGameEngine(account) {
+            console.log('🚀 Booting game engine for:', account.username);
             currentUser = account;
             walletBalance = account.balance || 0;
             document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
@@ -2402,27 +2664,25 @@
             updateStatsUI();
             updateBetHistoryUI();
             initChat();
-            // 🔥 FIXED: Notification listener using cleaned path
             if (account.userId) {
-                const notifRef = getNotificationsRef(account.userId);
-                if (notifRef) {
-                    notifRef.on('child_added', (snap) => {
-                        const data = snap.val();
-                        if (data && data.message) {
-                            showToast(data.message, 'success');
-                            refreshBalance();
-                            snap.ref.remove().catch(err => console.warn("Notif remove error:", err));
-                        }
-                    });
-                }
+                const cleanId = account.userId.replace('#', '');
+                const notifRef = db.ref('notifications/' + cleanId);
+                notifRef.on('child_added', (snap) => {
+                    const data = snap.val();
+                    if (data && data.message) {
+                        showToast(data.message, 'success');
+                        refreshBalance();
+                        snap.ref.remove().catch(err => console.warn("Notif remove error:", err));
+                    }
+                });
             }
-            // Online presence
             if (account.userId) {
                 const cleanId = account.userId.replace('#', '');
                 const onlineRef = getOnlineRef().child(cleanId);
                 onlineRef.set({ online: true, username: account.username, timestamp: Date.now() });
                 onlineRef.onDisconnect().remove();
             }
+            startTurnoverTasksListener();
         }
 
         function updateSoundBtn() {
@@ -2476,6 +2736,12 @@
                     if (data.turnoverCompleted !== undefined) currentUser.turnoverCompleted = data.turnoverCompleted;
                     if (data.stats) currentUser.stats = data.stats;
                     if (data.betHistory) currentUser.betHistory = data.betHistory;
+                    if (data.turnoverTasks) {
+                        currentUser.turnoverTasks = data.turnoverTasks;
+                        turnoverTasks = data.turnoverTasks;
+                        renderTurnoverTasks();
+                        renderAccountTasks();
+                    }
                     updateTurnoverUI();
                     updateStatsUI();
                     updateBetHistoryUI();
@@ -2501,7 +2767,7 @@
         }
 
         // ============================================================
-        //  TURNOVER
+        //  TURNOVER (existing system)
         // ============================================================
         function updateTurnoverUI() {
             if (!currentUser) return;
@@ -2536,7 +2802,257 @@
         }
 
         // ============================================================
-        //  STATS & BET HISTORY
+        //  🔥 TURNOVER TASKS SYSTEM (Main game & Account modal) – ডিলিট বাটন সরানো হয়েছে
+        // ============================================================
+        function startTurnoverTasksListener() {
+            if (!currentUser || !currentUser.username) return;
+            const tasksRef = getTurnoverTasksRef(currentUser.username);
+            tasksRef.on('value', (snap) => {
+                const data = snap.val();
+                if (data && typeof data === 'object') {
+                    turnoverTasks = data;
+                    currentUser.turnoverTasks = data;
+                } else {
+                    turnoverTasks = {};
+                    currentUser.turnoverTasks = {};
+                }
+                renderTurnoverTasks();
+                renderAccountTasks();
+            });
+        }
+
+        function renderTurnoverTasks() {
+            const bar = document.getElementById('turnoverTasksBar');
+            const list = document.getElementById('turnoverTasksList');
+            const countLabel = document.getElementById('tasks-count-label');
+
+            const activeTasks = Object.keys(turnoverTasks).filter(key => {
+                const t = turnoverTasks[key];
+                return t && t.status === 'active';
+            });
+
+            if (activeTasks.length === 0) {
+                bar.classList.remove('active');
+                list.innerHTML = '';
+                countLabel.textContent = '0 active';
+                return;
+            }
+
+            bar.classList.add('active');
+            countLabel.textContent = activeTasks.length + ' active';
+
+            let html = '';
+            const now = Date.now();
+            activeTasks.forEach(key => {
+                const t = turnoverTasks[key];
+                if (!t) return;
+                const total = t.amount || 0;
+                const completed = t.completed || 0;
+                const progress = total > 0 ? Math.min(100, (completed / total) * 100) : 0;
+                const remaining = Math.max(0, total - completed);
+
+                const expiry = t.expiry || 0;
+                let timeLeft = Math.max(0, (expiry - now) / 1000);
+                let timerStr = '--:--:--';
+                let timerClass = 'task-timer';
+
+                if (timeLeft <= 0) {
+                    timerStr = '⏰ Expired';
+                    timerClass += ' expired';
+                    if (t.status === 'active') {
+                        t.status = 'expired';
+                        updateTaskStatus(key, 'expired');
+                    }
+                } else if (remaining <= 0) {
+                    timerStr = '✅ Done!';
+                    timerClass += ' completed';
+                    if (t.status === 'active') {
+                        t.status = 'completed';
+                        updateTaskStatus(key, 'completed');
+                    }
+                } else {
+                    const hrs = Math.floor(timeLeft / 3600);
+                    const mins = Math.floor((timeLeft % 3600) / 60);
+                    const secs = Math.floor(timeLeft % 60);
+                    timerStr = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                    if (timeLeft < 3600) timerClass += ' urgent';
+                }
+
+                const statusBadge = t.status === 'active' ? 'active' : (t.status === 'completed' ? 'completed' :
+                    'expired');
+                const statusLabel = t.status === 'active' ? 'Active' : (t.status === 'completed' ? '✅ Done' :
+                    '⏰ Expired');
+
+                html += `
+                    <div class="turnover-task-item" data-task-id="${key}">
+                        <div class="task-info">
+                            <span class="task-amount">৳${total}</span>
+                            <span class="task-remaining">Rem: ৳${remaining.toFixed(0)}</span>
+                            <div class="task-progress">
+                                <div class="fill" style="width:${progress}%;"></div>
+                            </div>
+                        </div>
+                        <span class="task-status-badge ${statusBadge}">${statusLabel}</span>
+                        <span class="${timerClass}">${timerStr}</span>
+                        <!-- 🔥 ডিলিট বাটন সম্পূর্ণ রিমুভ করা হয়েছে -->
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+
+            if (window._taskTimerInterval) clearInterval(window._taskTimerInterval);
+            window._taskTimerInterval = setInterval(() => {
+                const stillActive = Object.keys(turnoverTasks).filter(k => turnoverTasks[k] && turnoverTasks[k]
+                    .status === 'active');
+                if (stillActive.length > 0) {
+                    renderTurnoverTasks();
+                    renderAccountTasks();
+                } else {
+                    clearInterval(window._taskTimerInterval);
+                }
+            }, 1000);
+        }
+
+        function renderAccountTasks() {
+            const container = document.getElementById('accountTasksList');
+            const countLabel = document.getElementById('account-task-count');
+            if (!container) return;
+
+            const tasks = Object.keys(turnoverTasks).filter(key => {
+                const t = turnoverTasks[key];
+                return t && (t.status === 'active' || t.status === 'completed' || t.status === 'expired');
+            });
+
+            countLabel.textContent = tasks.length + ' tasks';
+
+            if (tasks.length === 0) {
+                container.innerHTML = '<div class="empty-msg">No tasks assigned.</div>';
+                return;
+            }
+
+            let html = '';
+            const now = Date.now();
+            tasks.forEach(key => {
+                const t = turnoverTasks[key];
+                if (!t) return;
+                const total = t.amount || 0;
+                const completed = t.completed || 0;
+                const progress = total > 0 ? Math.min(100, (completed / total) * 100) : 0;
+                const remaining = Math.max(0, total - completed);
+
+                const expiry = t.expiry || 0;
+                let timeLeft = Math.max(0, (expiry - now) / 1000);
+                let timerStr = '--:--:--';
+                let timerClass = 'task-timer';
+
+                if (timeLeft <= 0) {
+                    timerStr = '⏰ Expired';
+                    timerClass += ' expired';
+                } else if (remaining <= 0) {
+                    timerStr = '✅ Done';
+                    timerClass += ' completed';
+                } else {
+                    const hrs = Math.floor(timeLeft / 3600);
+                    const mins = Math.floor((timeLeft % 3600) / 60);
+                    const secs = Math.floor(timeLeft % 60);
+                    timerStr = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                    if (timeLeft < 3600) timerClass += ' urgent';
+                }
+
+                const statusBadge = t.status === 'active' ? 'active' : (t.status === 'completed' ? 'completed' :
+                    'expired');
+                const statusLabel = t.status === 'active' ? 'Active' : (t.status === 'completed' ? '✅ Done' :
+                    '⏰ Expired');
+
+                html += `
+                    <div class="account-task-item">
+                        <div class="task-info">
+                            <span class="task-amount">৳${total}</span>
+                            <span class="task-remaining" style="font-size:8px; color:#94a3b8;">Rem: ৳${remaining.toFixed(0)}</span>
+                            <div class="task-progress">
+                                <div class="fill" style="width:${progress}%;"></div>
+                            </div>
+                        </div>
+                        <span class="task-status-badge ${statusBadge}">${statusLabel}</span>
+                        <span class="${timerClass}">${timerStr}</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        async function updateTaskStatus(taskId, status) {
+            if (!currentUser || !currentUser.username) return;
+            try {
+                await getTurnoverTasksRef(currentUser.username).child(taskId).update({ status: status });
+                if (turnoverTasks[taskId]) turnoverTasks[taskId].status = status;
+            } catch (e) {
+                console.warn('Update task status error:', e);
+            }
+        }
+
+        // 🔥 deleteTurnoverTask ফাংশনটি রেখে দিয়েছি, কিন্তু কোনো বাটন নেই, তাই প্লেয়াররা ডিলিট করতে পারবে না
+        async function deleteTurnoverTask(taskId) {
+            // এই ফাংশন এখন শুধু এডমিন প্যানেল থেকেই কল হবে, প্লেয়ার পেজ থেকে নয়
+            if (!currentUser || !currentUser.username) return;
+            if (!confirm('Delete this turnover task?')) return;
+            try {
+                await getTurnoverTasksRef(currentUser.username).child(taskId).remove();
+                delete turnoverTasks[taskId];
+                showToast('✅ Task deleted.', 'success');
+                renderTurnoverTasks();
+                renderAccountTasks();
+            } catch (e) {
+                showToast('Delete failed: ' + e.message, 'error');
+                console.error(e);
+            }
+        }
+
+        async function addBetToTurnoverTasks(amount) {
+            if (!currentUser || !currentUser.username) return;
+            if (!amount || amount <= 0) return;
+
+            await addTurnoverCompleted(amount);
+
+            const tasksRef = getTurnoverTasksRef(currentUser.username);
+            const snap = await tasksRef.once('value');
+            const data = snap.val();
+            if (!data) return;
+
+            const updates = {};
+            let anyUpdated = false;
+            Object.keys(data).forEach(key => {
+                const t = data[key];
+                if (t && t.status === 'active') {
+                    const completed = (t.completed || 0) + amount;
+                    updates[key + '/completed'] = completed;
+                    if (completed >= (t.amount || 0)) {
+                        updates[key + '/status'] = 'completed';
+                    }
+                    anyUpdated = true;
+                }
+            });
+
+            if (anyUpdated) {
+                try {
+                    await tasksRef.update(updates);
+                    const fresh = await tasksRef.once('value');
+                    if (fresh.val()) {
+                        turnoverTasks = fresh.val();
+                        currentUser.turnoverTasks = fresh.val();
+                    }
+                    renderTurnoverTasks();
+                    renderAccountTasks();
+                } catch (e) {
+                    console.warn('Add bet to turnover tasks error:', e);
+                }
+            }
+        }
+
+        // ============================================================
+        //  STATS & BET HISTORY (unchanged)
         // ============================================================
         function updateStatsUI() {
             if (!currentUser || !currentUser.stats) return;
@@ -2610,7 +3126,7 @@
         }
 
         // ============================================================
-        //  CHAT SYSTEM
+        //  CHAT SYSTEM (unchanged)
         // ============================================================
         function initChat() {
             if (chatInitialized) return;
@@ -2699,7 +3215,7 @@
         }
 
         // ============================================================
-        //  MY ACCOUNT, HISTORY, CHATBOT
+        //  MY ACCOUNT, HISTORY, CHATBOT (unchanged)
         // ============================================================
         function openMyAccountModal() {
             initAudioEngine();
@@ -2716,6 +3232,7 @@
                 updateTurnoverUI();
                 updateStatsUI();
                 updateBetHistoryUI();
+                renderAccountTasks();
             }
             document.getElementById('my-account-modal').style.display = 'flex';
         }
@@ -2776,20 +3293,17 @@
                         localStorage.setItem('rocket_session', JSON.stringify(currentUser)); }
                 } else if (type === 'withdraw') {
                     const amount = data.amount;
-                    // Check balance
                     if (userData.balance < amount) { showToast('Insufficient balance!', 'error'); return; }
                     const newBalance = userData.balance - amount;
                     const history = userData.withdrawHistory || [];
                     history.unshift(data);
                     data.amountDeducted = true;
 
-                    // 🔥 UPDATE FIREBASE BALANCE
                     await getUserRef(currentUser.username).update({
                         balance: newBalance,
                         withdrawHistory: history
                     });
 
-                    // Update local state
                     walletBalance = newBalance;
                     currentUser.balance = newBalance;
                     currentUser.withdrawHistory = history;
@@ -2799,7 +3313,6 @@
                     showToast(`✅ Withdrawal request of ৳${amount} submitted. Balance updated.`, 'success');
                 }
 
-                // Update local cache
                 let users = await fetchAllUsers();
                 let idx = users.findIndex(u => u.username === currentUser.username);
                 if (idx !== -1) {
@@ -2818,7 +3331,7 @@
         }
 
         // ============================================================
-        //  TRANSACTION HISTORY MODAL (refresh data each time)
+        //  TRANSACTION HISTORY MODAL (unchanged)
         // ============================================================
         async function openTransactionHistoryModal(type) {
             if (!currentUser) return;
@@ -2889,7 +3402,7 @@
         }
 
         // ============================================================
-        //  WALLET (Deposit / Withdraw)
+        //  WALLET (unchanged)
         // ============================================================
         function selectMethod(el, brand) {
             document.querySelectorAll('.method-opt').forEach(o => o.className = 'method-opt');
@@ -2949,7 +3462,6 @@
                 let dateStr = now.toLocaleDateString() + " " + now.toLocaleTimeString([], { hour: '2-digit',
                     minute: '2-digit' });
 
-                // 🔥 This will now deduct balance automatically
                 await saveTransactionRecord('withdraw', {
                     amount: val,
                     method: selectedChannel,
@@ -3000,7 +3512,7 @@
         }
 
         // ============================================================
-        //  CRASH HISTORY
+        //  CRASH HISTORY (unchanged)
         // ============================================================
         async function loadCrashHistory() {
             if (!currentUser) return;
@@ -3074,7 +3586,7 @@
         }
 
         // ============================================================
-        //  🎮 GAME ENGINE (with forced crash fix)
+        //  🎮 GAME ENGINE (unchanged)
         // ============================================================
         function startRoundSync() {
             const roundRef = getRoundRef();
@@ -3189,6 +3701,7 @@
                         betsData[id].currentValue = amt;
                         betsData[id].autoRoundsLeft--;
                         addTurnoverCompleted(amt);
+                        addBetToTurnoverTasks(amt);
                         syncWalletDatabase();
                     }
                 }
@@ -3321,9 +3834,6 @@
             }, 45);
         }
 
-        // ============================================================
-        //  🔥 FIXED: triggerCrash() – remove forcedCrash after crash
-        // ============================================================
         function triggerCrash() {
             currentGameState = "CRASHED";
             document.getElementById('mult-txt').innerText = "FLEW AWAY";
@@ -3337,12 +3847,11 @@
             addCrashToHistory(targetCrashPoint);
             syncWalletDatabase();
 
-            // 🔥 FIX: Clear forcedCrash so it doesn't repeat
             getRoundRef().update({
                 state: 'CRASHED',
                 crashPoint: targetCrashPoint,
                 multiplier: targetCrashPoint,
-                forcedCrash: null  // <-- এই লাইনটি যোগ করা হয়েছে
+                forcedCrash: null
             });
 
             betsData[1] = { activeAmount: 0, hasBet: false, hasCashedOut: false, cashoutMult: 1.00, currentValue: 0,
@@ -3415,6 +3924,9 @@
             }, 4000);
         }
 
+        // ============================================================
+        //  🔥 UPDATED: handleBetClick – also adds to turnover tasks
+        // ============================================================
         function handleBetClick(id) {
             initAudioEngine();
             let btn = document.getElementById(`action-btn-${id}`);
@@ -3435,6 +3947,7 @@
                 betsData[id].hasBet = true;
                 betsData[id].currentValue = amt;
                 addTurnoverCompleted(amt);
+                addBetToTurnoverTasks(amt);
                 syncWalletDatabase();
                 btn.innerText = "Waiting...";
                 btn.className = "btn-main-action wait";
@@ -4192,7 +4705,7 @@
                 try {
                     let account = JSON.parse(session);
                     bootGameEngine(account);
-                } catch (e) { /* ignore */ }
+                } catch (e) { console.warn('Session parse error:', e); }
             }
             loadSoundSettings();
             updateSoundBtn();
@@ -4203,7 +4716,7 @@
             });
         });
 
-        console.log("🚀 Rocket X Player Edition – Forced crash fix applied.");
+        console.log("🚀 Rocket X – Delete button removed from main game tasks.");
     </script>
 </body>
 </html>
