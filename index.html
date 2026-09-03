@@ -824,9 +824,7 @@
             color: #ff1f5a;
             border: 1px solid rgba(255, 31, 90, 0.2);
         }
-        /* 🔥 ডিলিট বাটন সম্পূর্ণ রিমুভ করা হয়েছে – শুধু এডমিন প্যানেলেই থাকবে */
-        /* .task-delete-btn সরিয়ে দেওয়া হয়েছে */
-
+        /* ডিলিট বাটন সম্পূর্ণ রিমুভ করা হয়েছে */
         .turnover-task-item .task-remaining {
             color: #94a3b8;
             font-size: 8px;
@@ -2767,7 +2765,7 @@
         }
 
         // ============================================================
-        //  TURNOVER (existing system)
+        //  🔥 UPDATED: TURNOVER UI & FUNCTIONS
         // ============================================================
         function updateTurnoverUI() {
             if (!currentUser) return;
@@ -2788,10 +2786,17 @@
             await getUserRef(currentUser.username).update({ turnoverCompleted: currentUser.turnoverCompleted });
             let users = await fetchAllUsers();
             let idx = users.findIndex(u => u.username === currentUser.username);
-            if (idx !== -1) { users[idx].turnoverCompleted = currentUser.turnoverCompleted;
-                localStorage.setItem('rocket_users', JSON.stringify(users)); }
+            if (idx !== -1) {
+                users[idx].turnoverCompleted = currentUser.turnoverCompleted;
+                localStorage.setItem('rocket_users', JSON.stringify(users));
+            }
             localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+            // UI রিফ্রেশ
             updateTurnoverUI();
+            renderTurnoverTasks();
+            renderAccountTasks();
+            updateStatsUI();
+            updateBetHistoryUI();
         }
 
         function isTurnoverComplete() {
@@ -2802,7 +2807,7 @@
         }
 
         // ============================================================
-        //  🔥 TURNOVER TASKS SYSTEM (Main game & Account modal) – ডিলিট বাটন সরানো হয়েছে
+        //  🔥 UPDATED: TURNOVER TASKS SYSTEM
         // ============================================================
         function startTurnoverTasksListener() {
             if (!currentUser || !currentUser.username) return;
@@ -2894,7 +2899,7 @@
                         </div>
                         <span class="task-status-badge ${statusBadge}">${statusLabel}</span>
                         <span class="${timerClass}">${timerStr}</span>
-                        <!-- 🔥 ডিলিট বাটন সম্পূর্ণ রিমুভ করা হয়েছে -->
+                        <!-- ডিলিট বাটন নেই -->
                     </div>
                 `;
             });
@@ -2993,33 +2998,26 @@
             }
         }
 
-        // 🔥 deleteTurnoverTask ফাংশনটি রেখে দিয়েছি, কিন্তু কোনো বাটন নেই, তাই প্লেয়াররা ডিলিট করতে পারবে না
+        // প্লেয়ারদের জন্য ডিলিট ফাংশন নেই (শুধু এডমিন প্যানেল)
         async function deleteTurnoverTask(taskId) {
-            // এই ফাংশন এখন শুধু এডমিন প্যানেল থেকেই কল হবে, প্লেয়ার পেজ থেকে নয়
-            if (!currentUser || !currentUser.username) return;
-            if (!confirm('Delete this turnover task?')) return;
-            try {
-                await getTurnoverTasksRef(currentUser.username).child(taskId).remove();
-                delete turnoverTasks[taskId];
-                showToast('✅ Task deleted.', 'success');
-                renderTurnoverTasks();
-                renderAccountTasks();
-            } catch (e) {
-                showToast('Delete failed: ' + e.message, 'error');
-                console.error(e);
-            }
+            // এই ফাংশন প্লেয়ার পেজে ডিলিট বাটন না থাকায় ব্যবহৃত হবে না
         }
 
         async function addBetToTurnoverTasks(amount) {
             if (!currentUser || !currentUser.username) return;
             if (!amount || amount <= 0) return;
 
+            // টার্নওভার কমপ্লিট আপডেট
             await addTurnoverCompleted(amount);
 
             const tasksRef = getTurnoverTasksRef(currentUser.username);
             const snap = await tasksRef.once('value');
             const data = snap.val();
-            if (!data) return;
+            if (!data) {
+                renderTurnoverTasks();
+                renderAccountTasks();
+                return;
+            }
 
             const updates = {};
             let anyUpdated = false;
@@ -3036,19 +3034,18 @@
             });
 
             if (anyUpdated) {
-                try {
-                    await tasksRef.update(updates);
-                    const fresh = await tasksRef.once('value');
-                    if (fresh.val()) {
-                        turnoverTasks = fresh.val();
-                        currentUser.turnoverTasks = fresh.val();
-                    }
-                    renderTurnoverTasks();
-                    renderAccountTasks();
-                } catch (e) {
-                    console.warn('Add bet to turnover tasks error:', e);
+                await tasksRef.update(updates);
+                const freshSnap = await tasksRef.once('value');
+                if (freshSnap.val()) {
+                    turnoverTasks = freshSnap.val();
+                    currentUser.turnoverTasks = freshSnap.val();
                 }
             }
+
+            // UI রিফ্রেশ
+            renderTurnoverTasks();
+            renderAccountTasks();
+            updateTurnoverUI();
         }
 
         // ============================================================
@@ -4716,7 +4713,7 @@
             });
         });
 
-        console.log("🚀 Rocket X – Delete button removed from main game tasks.");
+        console.log("🚀 Rocket X – Turnover tasks remaining fixed.");
     </script>
 </body>
 </html>
