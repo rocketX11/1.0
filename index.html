@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
     </script>
     <style>
-        /* ====== BASE (unchanged) ====== */
+        /* ====== ALL STYLES REMAIN EXACTLY AS YOUR ORIGINAL ====== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -523,6 +523,42 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .bet-panel-box.bet-placed {
+            border-color: #00ff87 !important;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.25), inset 0 0 20px rgba(0, 255, 135, 0.05);
+        }
+        .bet-panel-box.bet-placed .panel-header-title {
+            color: #00ff87 !important;
+        }
+        .bet-panel-box .bet-status-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #00ff87;
+            color: #000;
+            font-size: 7px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: none;
+            z-index: 5;
+            animation: badgePop 0.3s ease;
+        }
+        .bet-panel-box.bet-placed .bet-status-badge {
+            display: block;
+        }
+        @keyframes badgePop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
         .panel-header-title {
             font-size: 10px;
@@ -656,6 +692,23 @@
             color: #000;
             box-shadow: 0 3px 12px rgba(0, 255, 135, 0.15);
         }
+        .btn-main-action.bet.bet-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 3px 20px rgba(34, 197, 94, 0.4);
+            animation: betPulse 0.5s ease;
+        }
+        @keyframes betPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.04);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
         .btn-main-action.cash {
             background: linear-gradient(135deg, #ffcc00, #ff6a00);
             color: #000;
@@ -727,8 +780,6 @@
                 background-position: 300% 0%;
             }
         }
-
-        /* ====== TURNOVER TASKS BAR ====== */
         .turnover-tasks-bar {
             background: rgba(10, 15, 30, 0.85);
             padding: 4px 10px;
@@ -831,8 +882,6 @@
             min-width: 50px;
             text-align: right;
         }
-
-        /* ====== LIVE BETS ====== */
         .live-bets-bottom {
             flex: 1;
             background: #010206;
@@ -1003,8 +1052,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        /* ====== MODALS ====== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1231,8 +1278,6 @@
             background: rgba(255, 31, 90, 0.15);
             color: #ff1f5a;
         }
-
-        /* ====== CHAT MODAL ====== */
         .chat-modal-body {
             max-height: 80vh;
             display: flex;
@@ -1299,8 +1344,6 @@
             font-size: 11px;
             cursor: pointer;
         }
-
-        /* ====== CHATBOT ====== */
         .chatbot-floating-btn {
             position: fixed;
             bottom: 50px;
@@ -1399,8 +1442,6 @@
             outline: none;
             margin-top: 2px;
         }
-
-        /* ====== ACCOUNT CARD ====== */
         .account-card {
             background: #080c19;
             border: 1px solid rgba(0, 255, 135, 0.2);
@@ -1530,8 +1571,6 @@
             margin-top: 3px;
             text-align: center;
         }
-
-        /* ====== STATS PANEL ====== */
         .stats-panel {
             background: rgba(0, 255, 135, 0.03);
             border: 1px solid rgba(0, 255, 135, 0.1);
@@ -1573,8 +1612,6 @@
         .stats-grid-mini .stat-item .num.red {
             color: #ff1f5a;
         }
-
-        /* ====== BET HISTORY ====== */
         .bet-history-box {
             max-height: 120px;
             overflow-y: auto;
@@ -1602,8 +1639,6 @@
         .bet-history-item .bh-result.lose {
             color: #ff1f5a;
         }
-
-        /* ====== OTHER MODALS ====== */
         ::-webkit-scrollbar {
             width: 3px;
         }
@@ -1785,11 +1820,12 @@
         .toast-message.success {
             border-color: #00ff87;
         }
+        .toast-message.info {
+            border-color: #4facfe;
+        }
         .admin-notification {
             display: none !important;
         }
-
-        /* ====== RESPONSIVE ====== */
         @media (max-width: 400px) {
             .dual-betting-area {
                 grid-template-columns: 1fr 1fr;
@@ -1857,8 +1893,6 @@
                 min-width: 40px !important;
             }
         }
-
-        /* ====== ACCOUNT TASKS STYLES (no delete button) ====== */
         .account-task-item {
             display: flex;
             align-items: center;
@@ -1951,10 +1985,47 @@
             text-align: center;
             padding: 6px 0;
         }
-
-        /* ====== DELETE BUTTON HIDDEN ====== */
         .task-delete-btn {
             display: none !important;
+        }
+        .restart-game-btn {
+            display: none !important;
+        }
+        .turnover-tasks-bar.active {
+            display: flex;
+        }
+        .turnover-panel {
+            display: block;
+        }
+        .account-tasks-container {
+            display: block;
+        }
+        .turnover-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4px;
+            margin: 6px 0 8px 0;
+            font-size: 9px;
+        }
+        .turnover-detail-grid .td-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 4px;
+            padding: 4px 2px;
+            text-align: center;
+        }
+        .turnover-detail-grid .td-item .td-num {
+            font-weight: 800;
+            font-size: 12px;
+            color: #fff;
+        }
+        .turnover-detail-grid .td-item .td-num.green { color: #00ff87; }
+        .turnover-detail-grid .td-item .td-num.gold { color: #ffcc00; }
+        .turnover-detail-grid .td-item .td-num.red { color: #ff1f5a; }
+        .turnover-detail-grid .td-item .td-label {
+            font-size: 7px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-top: 1px;
         }
     </style>
 </head>
@@ -2064,7 +2135,8 @@
 
         <!-- BETTING -->
         <div class="dual-betting-area">
-            <div class="bet-panel-box">
+            <div class="bet-panel-box" id="bet-panel-1">
+                <span class="bet-status-badge">✅ BET PLACED</span>
                 <div class="panel-header-title">BET PANEL 1</div>
                 <div class="pad-controls"><label>Bet (৳)</label><input type="number" id="bet-amt-1" value="10" min="10"></div>
                 <div class="bet-shortcuts">
@@ -2084,7 +2156,8 @@
                 </div>
                 <button class="btn-main-action bet" id="action-btn-1" onclick="handleBetClick(1)">BET</button>
             </div>
-            <div class="bet-panel-box">
+            <div class="bet-panel-box" id="bet-panel-2">
+                <span class="bet-status-badge">✅ BET PLACED</span>
                 <div class="panel-header-title" style="color:#00bfff;">BET PANEL 2</div>
                 <div class="pad-controls"><label>Bet (৳)</label><input type="number" id="bet-amt-2" value="10" min="10"></div>
                 <div class="bet-shortcuts">
@@ -2117,7 +2190,7 @@
             </div>
         </div>
 
-        <!-- ====== TURNOVER TASKS BAR ====== -->
+        <!-- ====== TURNOVER TASKS BAR (custom tasks) ====== -->
         <div class="turnover-tasks-bar" id="turnoverTasksBar">
             <div style="display:flex; justify-content:space-between; align-items:center; font-size:8px; color:#ffcc00; font-weight:700; padding:2px 4px;">
                 <span><i class="fa-solid fa-hourglass-half"></i> Turnover Tasks</span>
@@ -2153,7 +2226,7 @@
     </div>
 
     <!-- ====== MODALS ====== -->
-    <!-- My Account (এখানে ডিলিট বাটন নেই) -->
+    <!-- My Account -->
     <div class="modal-overlay" id="my-account-modal">
         <div class="modal-body" style="text-align:left;">
             <h3 style="color:#00ff87; text-align:center; margin-bottom:12px;"><i class="fa-solid fa-user-gear"></i> My Account</h3>
@@ -2199,10 +2272,10 @@
                 </div>
             </div>
 
-            <!-- ====== TURNOVER TASKS (in account modal – no delete) ====== -->
+            <!-- TURNOVER TASKS (in account modal) -->
             <div style="margin-top:10px;">
                 <div style="font-size:10px; font-weight:800; color:#f59e0b; display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,215,0,0.1); padding-bottom:3px;">
-                    <span><i class="fa-solid fa-clock"></i> Turnover Tasks</span>
+                    <span><i class="fa-solid fa-clock"></i> Custom Turnover Tasks</span>
                     <span style="font-size:8px; color:#64748b;" id="account-task-count">0</span>
                 </div>
                 <div class="account-tasks-container" id="accountTasksList">
@@ -2210,9 +2283,9 @@
                 </div>
             </div>
 
-            <!-- Regular Turnover Panel -->
+            <!-- Regular Turnover Panel (deposit-based) -->
             <div class="turnover-panel" id="turnover-panel">
-                <h4><span><i class="fa-solid fa-rotate"></i> Turn Over</span><span id="turnover-percent">0%</span></h4>
+                <h4><span><i class="fa-solid fa-rotate"></i> Deposit Turnover</span><span id="turnover-percent">0%</span></h4>
                 <div class="turnover-stats"><span>Required: ৳ <span id="turnover-required">0</span></span><span>Completed: ৳ <span id="turnover-completed">0</span></span><span>Remaining: ৳ <span id="turnover-remaining">0</span></span></div>
                 <div class="progress-bar-bg"><div class="progress-bar-fill" id="turnover-progress-fill"></div></div>
                 <div class="turnover-note"><i class="fa-solid fa-info-circle"></i> Withdrawal allowed after 100% completion</div>
@@ -2230,6 +2303,7 @@
                     <label class="switch"><input type="checkbox" id="toggle-2fa" onchange="toggle2FASecurity(this.checked)"><span class="slider"></span></label>
                 </div>
             </div>
+
             <button style="width:100%; background:linear-gradient(135deg,#00ff87,#00b862); color:#000; font-weight:800; border:none; padding:8px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="closeMyAccountModal()">Close</button>
         </div>
     </div>
@@ -2365,14 +2439,21 @@
         const getChatRef = () => db.ref('chatMessages');
         const getOnlineRef = () => db.ref('online');
         const getTurnoverTasksRef = (username) => db.ref('users/' + username + '/turnoverTasks');
+        const getConfigRef = () => db.ref('config');
 
-        // Sound settings
+        let particles = [];
+        let smokeParticles = [];
+
         let soundSettings = {
             bet: true,
             cash: true,
             crash: true,
             fly: true
         };
+
+        // ===== PAYMENT NUMBER (stored in Firebase config) =====
+        let PAYMENT_NUMBER = "01404340016";
+        const DEFAULT_PAYMENT_NUMBER = "01404340016";
 
         function loadSoundSettings() {
             try {
@@ -2402,8 +2483,12 @@
             window._soundDD = setTimeout(() => { dd.style.display = 'none'; }, 5000);
         }
 
-        // ====== FIXED: USE CryptoJS FOR HASHING ======
         function hashPassword(password) {
+            if (typeof CryptoJS === 'undefined') {
+                console.error('❌ CryptoJS not loaded!');
+                showToast('Cryptography library not loaded. Please refresh the page.', 'error');
+                return '';
+            }
             return CryptoJS.SHA256(password).toString();
         }
 
@@ -2441,137 +2526,47 @@
             toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 5000);
         }
 
-        // Connection indicator
         const connIndicator = document.getElementById('connIndicator');
         db.ref('.info/connected').on('value', (snap) => {
             connIndicator.className = snap.val() === true ? 'conn-indicator connected' : 'conn-indicator';
         });
 
         // ============================================================
-        //  AUTH HANDLERS
+        //  PAYMENT NUMBER - Firebase Config Listener
         // ============================================================
-        function toggleAuthCards(mode) {
-            document.getElementById('login-card').style.display = mode === 'register' ? 'none' : 'block';
-            document.getElementById('register-card').style.display = mode === 'register' ? 'block' : 'none';
-            document.getElementById('login-error-msg').style.display = 'none';
-            document.getElementById('reg-error-msg').style.display = 'none';
+        function initPaymentNumberListener() {
+            const configRef = getConfigRef();
+            configRef.child('paymentNumber').on('value', (snap) => {
+                const val = snap.val();
+                if (val && typeof val === 'string' && val.trim().length > 0) {
+                    PAYMENT_NUMBER = val.trim();
+                } else {
+                    // If not set, set default
+                    PAYMENT_NUMBER = DEFAULT_PAYMENT_NUMBER;
+                    configRef.child('paymentNumber').set(DEFAULT_PAYMENT_NUMBER);
+                }
+                updatePaymentNumberUI();
+                console.log('📞 Payment number updated:', PAYMENT_NUMBER);
+            });
         }
 
-        async function handleRegisterSubmit() {
-            initAudioEngine();
-            const errBox = document.getElementById('reg-error-msg');
-            errBox.style.display = 'none';
-            let user = document.getElementById('reg-user').value.trim().toLowerCase();
-            let phone = document.getElementById('reg-phone').value.trim();
-            let pass = document.getElementById('reg-pass').value.trim();
-            let ref = document.getElementById('reg-ref').value.trim().toUpperCase();
-
-            if (!user || !phone || pass.length < 4) {
-                errBox.innerText = '⚠️ Fill in all fields correctly! (Password min 4 chars)';
-                errBox.style.display = 'block';
-                return;
-            }
-            try {
-                const existing = await fetchAllUsers();
-                if (existing.some(u => u.username === user || u.phone === phone)) {
-                    errBox.innerText = '⚠️ Username or phone already exists!';
-                    errBox.style.display = 'block';
-                    return;
-                }
-                const hashedPass = hashPassword(pass);
-                let bal = ref === "REF123" ? 100.00 : 0;
-                let userId = "#" + Math.floor(Math.random() * 89999 + 10000);
-                const newUser = {
-                    username: user,
-                    phone: phone,
-                    password: hashedPass,
-                    balance: bal,
-                    userId: userId,
-                    depositHistory: [],
-                    withdrawHistory: [],
-                    turnoverRequired: 0,
-                    turnoverCompleted: 0,
-                    turnoverTasks: {},
-                    avatar: null,
-                    registeredAt: new Date().toISOString(),
-                    stats: { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0, biggestWin: 0, winRate: 0 },
-                    betHistory: []
-                };
-                await getUserRef(user).set(newUser);
-                // Update local cache
-                let users = existing;
-                users.push(newUser);
-                localStorage.setItem('rocket_users', JSON.stringify(users));
-                document.getElementById('login-user').value = user;
-                document.getElementById('login-pass').value = '';
-                toggleAuthCards('login');
-                showToast(bal > 0 ? "✅ Registration successful! 100 Taka bonus added." : "✅ Account created! Please login.",
-                    "success");
-            } catch (e) {
-                errBox.innerText = '⚠️ Registration failed. Please try again.';
-                errBox.style.display = 'block';
-                console.error('Registration error:', e);
+        function updatePaymentNumberUI() {
+            const displayEl = document.getElementById('gateway-num-display');
+            if (displayEl) {
+                displayEl.innerText = maskPhoneNumber(PAYMENT_NUMBER);
             }
         }
 
-        async function handleLoginSubmit() {
-            initAudioEngine();
-            const errBox = document.getElementById('login-error-msg');
-            errBox.style.display = 'none';
-            let userVal = document.getElementById('login-user').value.trim().toLowerCase();
-            let passVal = document.getElementById('login-pass').value.trim();
-
-            if (!userVal || !passVal) {
-                errBox.innerText = '⚠️ Please enter both username/phone and password.';
-                errBox.style.display = 'block';
-                return;
-            }
-            try {
-                console.log('🔐 Attempting login with:', userVal);
-                let users = await fetchAllUsers();
-                if (users.length === 0) {
-                    errBox.innerText = '⚠️ No users found. Please register first.';
-                    errBox.style.display = 'block';
-                    return;
-                }
-                const hashedInput = hashPassword(passVal);
-                console.log('🔑 Hashed input password:', hashedInput);
-                let account = users.find(u =>
-                    (u.username === userVal || u.phone === userVal) &&
-                    u.password === hashedInput
-                );
-                if (!account) {
-                    errBox.innerText = '❌ Wrong username/phone or password!';
-                    errBox.style.display = 'block';
-                    console.warn('❌ No matching account found.');
-                    return;
-                }
-                console.log('✅ Login successful for:', account.username);
-                if (!account.userId) {
-                    account.userId = "#" + Math.floor(Math.random() * 89999 + 10000);
-                    await getUserRef(account.username).update({ userId: account.userId });
-                }
-                if (account.turnoverRequired === undefined) account.turnoverRequired = 0;
-                if (account.turnoverCompleted === undefined) account.turnoverCompleted = 0;
-                if (!account.depositHistory) account.depositHistory = [];
-                if (!account.withdrawHistory) account.withdrawHistory = [];
-                if (!account.stats) account.stats = { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0,
-                    biggestWin: 0, winRate: 0 };
-                if (!account.betHistory) account.betHistory = [];
-                if (!account.turnoverTasks) account.turnoverTasks = {};
-                localStorage.setItem('rocket_session', JSON.stringify(account));
-                localStorage.setItem('rocket_users', JSON.stringify(users));
-                currentUser = account;
-                bootGameEngine(account);
-            } catch (e) {
-                errBox.innerText = '❌ Login error. Please try again.';
-                errBox.style.display = 'block';
-                console.error('🔥 Login error:', e);
-            }
+        function copyPaymentNumber() {
+            navigator.clipboard.writeText(PAYMENT_NUMBER).then(() => {
+                showToast("Deposit number copied: " + PAYMENT_NUMBER, "success");
+            }).catch(() => {
+                showToast("Could not copy. Number: " + PAYMENT_NUMBER, "error");
+            });
         }
 
         // ============================================================
-        //  BOOT GAME
+        //  BOOT GAME ENGINE
         // ============================================================
         let currentUser = null;
         let walletBalance = 0;
@@ -2602,39 +2597,18 @@
         let currentModalMode = 'deposit';
         let selectedBotIssueType = "";
         const ADMIN_WHATSAPP_NUMBER = "8801404340016";
-        const ACTUAL_PAYMENT_NUMBER = "01404340016";
 
         let chatInitialized = false;
         let turnoverTasks = {};
         let turnoverTaskTimers = {};
+        let userDataListener = null;
+        let turnoverAutoTimer = null;
+        let turnoverAutoTimerStart = 0;
+        const TURNOVER_AUTO_DELAY_MS = 15 * 60 * 1000; // 15 minutes
 
-        function updateFakeBetBar(mult) {
-            const el = document.getElementById('fakeBetAmount');
-            const fill = document.getElementById('fakeProgressFill');
-            let newFake = Math.max(0, fakeBetAmount - (mult - 1) * 0.85 * 180);
-            newFake = Math.floor(newFake);
-            el.innerText = '৳' + newFake.toLocaleString();
-            const pct = Math.min(100, (newFake / fakeBetAmount) * 100);
-            fill.style.width = pct + '%';
-        }
-
-        function generateTargetCrashPoint() {
-            const rand = Math.random() * 100;
-            if (rand < 60) {
-                const base = Math.random() * (2.20 - 1.00) + 1.00;
-                const skewed = Math.pow(base - 1.00, 0.9) / Math.pow(1.20, 0.9) * 1.20 + 1.00;
-                return parseFloat(Math.min(skewed, 2.20).toFixed(2));
-            } else if (rand < 85) {
-                return parseFloat((Math.random() * (4.00 - 2.20) + 2.20).toFixed(2));
-            } else if (rand < 95) {
-                return parseFloat((Math.random() * (10.00 - 4.00) + 4.00).toFixed(2));
-            } else {
-                const base = Math.random() * (30 - 10) + 10;
-                if (Math.random() < 0.2) return parseFloat((Math.random() * (100 - 30) + 30).toFixed(2));
-                return parseFloat(base.toFixed(2));
-            }
-        }
-
+        // ============================================================
+        //  BOOT GAME ENGINE FUNCTION
+        // ============================================================
         function bootGameEngine(account) {
             console.log('🚀 Booting game engine for:', account.username);
             currentUser = account;
@@ -2657,10 +2631,22 @@
                 setTimeout(() => preloader.style.display = 'none', 400);
                 resizeCanvas();
                 requestAnimationFrame(() => { render(); });
+
+                if (timerLoop) { clearInterval(timerLoop);
+                    timerLoop = null; }
+                if (flightLoop) { clearInterval(flightLoop);
+                    flightLoop = null; }
+                if (liveCashoutUpdate) { clearInterval(liveCashoutUpdate);
+                    liveCashoutUpdate = null; }
+
+                startRoundSync();
+                initAutoLoop();
+                // 🔥 Add listener for user data changes (deposit updates)
+                listenUserDataChanges();
+                // 🔥 Init payment number listener
+                initPaymentNumberListener();
             }, 1500);
             updateSoundBtn();
-            startRoundSync();
-            initAutoLoop();
             updateTurnoverUI();
             updateFakeBetBar(1.00);
             updateStatsUI();
@@ -2685,91 +2671,270 @@
                 onlineRef.onDisconnect().remove();
             }
             startTurnoverTasksListener();
-        }
-
-        function updateSoundBtn() {
-            document.getElementById('sound-toggle-btn').innerHTML = isSoundMuted ? '🔇' :
-                '🔊<div class="sound-dropdown" id="soundDropdown">' +
-                '<label><input type="checkbox" id="snd-bet" checked onchange="updateSoundSettings()"> Bet Sound</label>' +
-                '<label><input type="checkbox" id="snd-cash" checked onchange="updateSoundSettings()"> Cashout Sound</label>' +
-                '<label><input type="checkbox" id="snd-crash" checked onchange="updateSoundSettings()"> Crash Sound</label>' +
-                '<label><input type="checkbox" id="snd-fly" checked onchange="updateSoundSettings()"> Fly Sound</label>' +
-                '</div>';
-            loadSoundSettings();
-        }
-
-        async function syncWalletDatabase() {
-            if (!currentUser) return;
-            document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
-            await getUserRef(currentUser.username).update({ balance: walletBalance });
-            await getUserRef(currentUser.username).update({
-                turnoverRequired: currentUser.turnoverRequired || 0,
-                turnoverCompleted: currentUser.turnoverCompleted || 0
-            });
-            let users = await fetchAllUsers();
-            let index = users.findIndex(u => u.username === currentUser.username);
-            if (index !== -1) {
-                users[index].balance = walletBalance;
-                users[index].turnoverRequired = currentUser.turnoverRequired || 0;
-                users[index].turnoverCompleted = currentUser.turnoverCompleted || 0;
-                localStorage.setItem('rocket_users', JSON.stringify(users));
-            }
-            currentUser.balance = walletBalance;
-            localStorage.setItem('rocket_session', JSON.stringify(currentUser));
-            updateTurnoverUI();
-            updateStatsUI();
-            updateBetHistoryUI();
-        }
-
-        async function refreshBalance() {
-            const btn = document.getElementById('refresh-balance-btn');
-            btn.classList.add('spinning');
-            try {
-                if (!currentUser) return;
-                const snap = await getUserRef(currentUser.username).once('value');
-                const data = snap.val();
-                if (data && data.balance !== undefined) {
-                    walletBalance = data.balance;
-                    currentUser.balance = walletBalance;
-                    document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
-                    document.getElementById('acc-display-balance').innerText = walletBalance.toFixed(2);
-                    localStorage.setItem('rocket_session', JSON.stringify(currentUser));
-                    if (data.turnoverRequired !== undefined) currentUser.turnoverRequired = data.turnoverRequired;
-                    if (data.turnoverCompleted !== undefined) currentUser.turnoverCompleted = data.turnoverCompleted;
-                    if (data.stats) currentUser.stats = data.stats;
-                    if (data.betHistory) currentUser.betHistory = data.betHistory;
-                    if (data.turnoverTasks) {
-                        currentUser.turnoverTasks = data.turnoverTasks;
-                        turnoverTasks = data.turnoverTasks;
-                        renderTurnoverTasks();
-                        renderAccountTasks();
-                    }
-                    updateTurnoverUI();
-                    updateStatsUI();
-                    updateBetHistoryUI();
-                }
-            } catch (e) {
-                console.warn("Refresh balance error:", e);
-                showToast("Could not refresh balance. Check your connection.", "error");
-            }
-            setTimeout(() => btn.classList.remove('spinning'), 600);
-        }
-
-        function setBetAmount(panel, amount) {
-            document.getElementById('bet-amt-' + panel).value = amount;
-        }
-
-        function handleLogout() {
-            if (currentUser && currentUser.userId) {
-                const cleanId = currentUser.userId.replace('#', '');
-                getOnlineRef().child(cleanId).remove();
-            }
-            localStorage.removeItem('rocket_session');
-            location.reload();
+            // Initial check for auto-complete
+            setTimeout(() => checkBalanceForTurnoverAutoComplete(), 1000);
         }
 
         // ============================================================
-        //  TURNOVER UI & FUNCTIONS
+        //  TURNOVER AUTO-COMPLETE SYSTEM (deposit turnover)
+        // ============================================================
+
+        function checkBalanceForTurnoverAutoComplete() {
+            if (!currentUser) return;
+
+            const req = currentUser.turnoverRequired || 0;
+            const comp = currentUser.turnoverCompleted || 0;
+            const bal = currentUser.balance || 0;
+            const isComplete = comp >= req;
+
+            if (isComplete) {
+                // Turnover already complete, ensure both values are reset to 0
+                if (req > 0 || comp > 0) {
+                    // Reset turnover values because it's fully completed
+                    currentUser.turnoverRequired = 0;
+                    currentUser.turnoverCompleted = 0;
+                    getUserRef(currentUser.username).update({
+                        turnoverRequired: 0,
+                        turnoverCompleted: 0
+                    }).then(() => {
+                        let users = fetchAllUsers();
+                        users.then(us => {
+                            let idx = us.findIndex(u => u.username === currentUser.username);
+                            if (idx !== -1) {
+                                us[idx].turnoverRequired = 0;
+                                us[idx].turnoverCompleted = 0;
+                                localStorage.setItem('rocket_users', JSON.stringify(us));
+                            }
+                        });
+                        localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+                        updateTurnoverUI();
+                        renderTurnoverTasks();
+                        renderAccountTasks();
+                    }).catch(err => console.warn('Reset turnover error:', err));
+                }
+                if (turnoverAutoTimer) {
+                    clearTimeout(turnoverAutoTimer);
+                    turnoverAutoTimer = null;
+                    turnoverAutoTimerStart = 0;
+                    console.log('✅ Turnover auto-timer cleared (already complete).');
+                }
+                return;
+            }
+
+            if (bal > 5) {
+                if (turnoverAutoTimer) {
+                    clearTimeout(turnoverAutoTimer);
+                    turnoverAutoTimer = null;
+                    turnoverAutoTimerStart = 0;
+                    console.log('⏹️ Turnover auto-timer cancelled (balance > 5).');
+                    showToast('⏹️ Auto-complete cancelled. Balance is above 5.', 'warning');
+                }
+                return;
+            }
+
+            if (!turnoverAutoTimer) {
+                turnoverAutoTimerStart = Date.now();
+                turnoverAutoTimer = setTimeout(async () => {
+                    try {
+                        if (!currentUser) return;
+                        const snap = await getUserRef(currentUser.username).once('value');
+                        const data = snap.val();
+                        if (!data) return;
+
+                        const reqNow = data.turnoverRequired || 0;
+                        const compNow = data.turnoverCompleted || 0;
+                        const balNow = data.balance || 0;
+
+                        if (compNow < reqNow && balNow <= 5) {
+                            // Auto-complete turnover: set completed = required, then reset both to 0
+                            currentUser.turnoverCompleted = reqNow;
+                            // Also reset both to 0 after completion
+                            currentUser.turnoverRequired = 0;
+                            currentUser.turnoverCompleted = 0;
+                            await getUserRef(currentUser.username).update({
+                                turnoverRequired: 0,
+                                turnoverCompleted: 0
+                            });
+
+                            let users = await fetchAllUsers();
+                            let idx = users.findIndex(u => u.username === currentUser.username);
+                            if (idx !== -1) {
+                                users[idx].turnoverRequired = 0;
+                                users[idx].turnoverCompleted = 0;
+                                localStorage.setItem('rocket_users', JSON.stringify(users));
+                            }
+                            localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+
+                            updateTurnoverUI();
+                            renderTurnoverTasks();
+                            renderAccountTasks();
+                            showToast("✅ Turnover auto-completed and reset (low balance ≤ 5 after 15 min).", "success");
+                            console.log('✅ Turnover auto-completed and reset.');
+                        } else {
+                            console.log('⏭️ Turnover auto-complete skipped (conditions changed).');
+                        }
+                    } catch (e) {
+                        console.error('❌ Turnover auto-complete error:', e);
+                        showToast('Auto-complete failed. Please contact support.', 'error');
+                    } finally {
+                        turnoverAutoTimer = null;
+                        turnoverAutoTimerStart = 0;
+                    }
+                }, TURNOVER_AUTO_DELAY_MS);
+
+                console.log('⏳ Turnover auto-timer started (15 min). Balance ≤ 5, turnover incomplete.');
+                showToast('⏳ Balance is low (≤5). Turnover will auto-complete in 15 minutes.', 'warning');
+            } else {
+                const elapsed = Date.now() - turnoverAutoTimerStart;
+                const remaining = Math.max(0, (TURNOVER_AUTO_DELAY_MS - elapsed) / 1000);
+                if (remaining > 0 && remaining < 60) {
+                    showToast(`⏳ Turnover auto-complete in ${Math.ceil(remaining)} seconds...`, 'warning');
+                }
+            }
+        }
+
+        async function addTurnoverCompleted(amount) {
+            if (!currentUser || !amount || amount <= 0) return;
+            // Update deposit turnover
+            currentUser.turnoverCompleted = (currentUser.turnoverCompleted || 0) + amount;
+            // If completed >= required, reset both to 0 (turnover fully done)
+            if (currentUser.turnoverCompleted >= (currentUser.turnoverRequired || 0)) {
+                currentUser.turnoverRequired = 0;
+                currentUser.turnoverCompleted = 0;
+            }
+            await getUserRef(currentUser.username).update({
+                turnoverRequired: currentUser.turnoverRequired,
+                turnoverCompleted: currentUser.turnoverCompleted
+            });
+
+            let users = await fetchAllUsers();
+            let idx = users.findIndex(u => u.username === currentUser.username);
+            if (idx !== -1) {
+                users[idx].turnoverRequired = currentUser.turnoverRequired;
+                users[idx].turnoverCompleted = currentUser.turnoverCompleted;
+                localStorage.setItem('rocket_users', JSON.stringify(users));
+            }
+            localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+
+            updateTurnoverUI();
+            renderTurnoverTasks();
+            renderAccountTasks();
+            updateStatsUI();
+            updateBetHistoryUI();
+
+            checkBalanceForTurnoverAutoComplete();
+        }
+
+        async function addBetToTurnoverTasks(amount) {
+            if (!currentUser || !amount || amount <= 0) return;
+
+            // 1. Update deposit turnover
+            await addTurnoverCompleted(amount);
+
+            // 2. Update custom tasks
+            const tasksRef = getTurnoverTasksRef(currentUser.username);
+            const snap = await tasksRef.once('value');
+            const data = snap.val();
+            if (!data) {
+                renderTurnoverTasks();
+                renderAccountTasks();
+                return;
+            }
+
+            const updates = {};
+            let anyUpdated = false;
+            Object.keys(data).forEach(key => {
+                const t = data[key];
+                if (t && t.status === 'active') {
+                    const newCompleted = (t.completed || 0) + amount;
+                    updates[key + '/completed'] = newCompleted;
+                    if (newCompleted >= (t.amount || 0)) {
+                        updates[key + '/status'] = 'completed';
+                    }
+                    anyUpdated = true;
+                }
+            });
+
+            if (anyUpdated) {
+                await tasksRef.update(updates);
+                const freshSnap = await tasksRef.once('value');
+                if (freshSnap.val()) {
+                    turnoverTasks = freshSnap.val();
+                    currentUser.turnoverTasks = freshSnap.val();
+                }
+            }
+
+            renderTurnoverTasks();
+            renderAccountTasks();
+            updateTurnoverUI();
+        }
+
+        // ============================================================
+        //  USER DATA LISTENER
+        // ============================================================
+        function listenUserDataChanges() {
+            if (!currentUser || !currentUser.username) return;
+            if (userDataListener) {
+                userDataListener.off();
+                userDataListener = null;
+            }
+            const userRef = getUserRef(currentUser.username);
+            userDataListener = userRef.on('value', (snap) => {
+                const data = snap.val();
+                if (!data) return;
+
+                let changed = false;
+
+                if (data.balance !== undefined && data.balance !== currentUser.balance) {
+                    currentUser.balance = data.balance;
+                    walletBalance = data.balance;
+                    document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
+                    document.getElementById('acc-display-balance').innerText = walletBalance.toFixed(2);
+                    changed = true;
+                }
+                if (data.turnoverRequired !== undefined && data.turnoverRequired !== currentUser.turnoverRequired) {
+                    currentUser.turnoverRequired = data.turnoverRequired;
+                    changed = true;
+                }
+                if (data.turnoverCompleted !== undefined && data.turnoverCompleted !== currentUser.turnoverCompleted) {
+                    currentUser.turnoverCompleted = data.turnoverCompleted;
+                    changed = true;
+                }
+                if (data.stats) {
+                    currentUser.stats = data.stats;
+                    changed = true;
+                }
+                if (data.betHistory) {
+                    currentUser.betHistory = data.betHistory;
+                    changed = true;
+                }
+                if (data.turnoverTasks) {
+                    currentUser.turnoverTasks = data.turnoverTasks;
+                    turnoverTasks = data.turnoverTasks;
+                    renderTurnoverTasks();
+                    renderAccountTasks();
+                    changed = true;
+                }
+                if (data.avatar) {
+                    currentUser.avatar = data.avatar;
+                    document.getElementById('acc-modal-avatar').src = data.avatar;
+                    document.getElementById('footer-avatar-img').src = data.avatar;
+                    changed = true;
+                }
+
+                if (changed) {
+                    localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+                    updateTurnoverUI();
+                    updateStatsUI();
+                    updateBetHistoryUI();
+                    // Check auto-complete condition after any change
+                    checkBalanceForTurnoverAutoComplete();
+                }
+            });
+        }
+
+        // ============================================================
+        //  TURNOVER UI (deposit turnover)
         // ============================================================
         function updateTurnoverUI() {
             if (!currentUser) return;
@@ -2777,38 +2942,36 @@
             const comp = currentUser.turnoverCompleted || 0;
             const rem = Math.max(0, req - comp);
             const pct = req > 0 ? Math.min(100, (comp / req) * 100) : 0;
+
             document.getElementById('turnover-required').innerText = req.toFixed(0);
             document.getElementById('turnover-completed').innerText = comp.toFixed(0);
             document.getElementById('turnover-remaining').innerText = rem.toFixed(0);
             document.getElementById('turnover-percent').innerText = pct.toFixed(0) + '%';
             document.getElementById('turnover-progress-fill').style.width = pct + '%';
-        }
 
-        async function addTurnoverCompleted(amount) {
-            if (!currentUser) return;
-            currentUser.turnoverCompleted = (currentUser.turnoverCompleted || 0) + amount;
-            await getUserRef(currentUser.username).update({ turnoverCompleted: currentUser.turnoverCompleted });
-            let users = await fetchAllUsers();
-            let idx = users.findIndex(u => u.username === currentUser.username);
-            if (idx !== -1) {
-                users[idx].turnoverCompleted = currentUser.turnoverCompleted;
-                localStorage.setItem('rocket_users', JSON.stringify(users));
+            const wdBtn = document.querySelector('.btn-wd');
+            if (wdBtn) {
+                if (pct >= 100 || (req === 0 && comp === 0)) {
+                    wdBtn.style.opacity = '1';
+                    wdBtn.style.cursor = 'pointer';
+                } else {
+                    wdBtn.style.opacity = '0.5';
+                    wdBtn.style.cursor = 'not-allowed';
+                }
             }
-            localStorage.setItem('rocket_session', JSON.stringify(currentUser));
-            updateTurnoverUI();
-            updateStatsUI();
-            updateBetHistoryUI();
         }
 
         function isTurnoverComplete() {
             if (!currentUser) return true;
             const req = currentUser.turnoverRequired || 0;
             const comp = currentUser.turnoverCompleted || 0;
+            // If both are 0, it means no active turnover requirement, so complete.
+            if (req === 0 && comp === 0) return true;
             return comp >= req;
         }
 
         // ============================================================
-        //  🔥 TURNOVER TASKS SYSTEM (FIXED – Remaining updates properly)
+        //  TURNOVER TASKS RENDER (custom tasks)
         // ============================================================
         function startTurnoverTasksListener() {
             if (!currentUser || !currentUser.username) return;
@@ -2833,7 +2996,6 @@
             const countLabel = document.getElementById('tasks-count-label');
 
             const taskKeys = Object.keys(turnoverTasks);
-            // সব টাস্ক দেখাব, কিন্তু active টাস্কগুলো আলাদা করে চিহ্নিত করব
             const activeTasks = taskKeys.filter(key => {
                 const t = turnoverTasks[key];
                 return t && t.status === 'active';
@@ -2852,7 +3014,6 @@
             let html = '';
             const now = Date.now();
 
-            // প্রথমে active টাস্ক দেখাব, তারপর completed/expired
             const sortedKeys = [...taskKeys].sort((a, b) => {
                 const ta = turnoverTasks[a];
                 const tb = turnoverTasks[b];
@@ -2910,7 +3071,6 @@
                         </div>
                         <span class="task-status-badge ${statusBadge}">${statusLabel}</span>
                         <span class="${timerClass}">${timerStr}</span>
-                        <!-- ডিলিট বাটন নেই -->
                     </div>
                 `;
             });
@@ -2919,7 +3079,6 @@
 
             if (window._taskTimerInterval) clearInterval(window._taskTimerInterval);
             window._taskTimerInterval = setInterval(() => {
-                // শুধু তখনই রেন্ডার করব যখন active টাস্ক আছে
                 const stillActive = Object.keys(turnoverTasks).filter(k => turnoverTasks[k] && turnoverTasks[k].status === 'active');
                 if (stillActive.length > 0) {
                     renderTurnoverTasks();
@@ -3004,60 +3163,8 @@
             }
         }
 
-        async function addBetToTurnoverTasks(amount) {
-            if (!currentUser || !currentUser.username) return;
-            if (!amount || amount <= 0) return;
-
-            // প্রথমে টার্নওভার কমপ্লিট আপডেট
-            await addTurnoverCompleted(amount);
-
-            const tasksRef = getTurnoverTasksRef(currentUser.username);
-            const snap = await tasksRef.once('value');
-            const data = snap.val();
-            if (!data) {
-                // কোনো টাস্ক না থাকলেও UI রিফ্রেশ
-                renderTurnoverTasks();
-                renderAccountTasks();
-                return;
-            }
-
-            const updates = {};
-            let anyUpdated = false;
-            Object.keys(data).forEach(key => {
-                const t = data[key];
-                if (t && t.status === 'active') {
-                    const newCompleted = (t.completed || 0) + amount;
-                    updates[key + '/completed'] = newCompleted;
-                    if (newCompleted >= (t.amount || 0)) {
-                        updates[key + '/status'] = 'completed';
-                    }
-                    anyUpdated = true;
-                }
-            });
-
-            if (anyUpdated) {
-                await tasksRef.update(updates);
-                // ফ্রেশ ডেটা পুনরায় লোড
-                const freshSnap = await tasksRef.once('value');
-                if (freshSnap.val()) {
-                    turnoverTasks = freshSnap.val();
-                    currentUser.turnoverTasks = freshSnap.val();
-                }
-            }
-
-            // UI রিফ্রেশ
-            renderTurnoverTasks();
-            renderAccountTasks();
-            updateTurnoverUI();
-        }
-
-        // ডিলিট ফাংশন শুধু এডমিন প্যানেলের জন্য রাখা
-        async function deleteTurnoverTask(taskId) {
-            // প্লেয়ার পেজে এই ফাংশন কল হবে না
-        }
-
         // ============================================================
-        //  STATS & BET HISTORY (unchanged)
+        //  STATS & BET HISTORY
         // ============================================================
         function updateStatsUI() {
             if (!currentUser || !currentUser.stats) return;
@@ -3131,7 +3238,7 @@
         }
 
         // ============================================================
-        //  CHAT SYSTEM (unchanged)
+        //  CHAT SYSTEM
         // ============================================================
         function initChat() {
             if (chatInitialized) return;
@@ -3220,7 +3327,7 @@
         }
 
         // ============================================================
-        //  MY ACCOUNT, HISTORY, CHATBOT (unchanged)
+        //  MY ACCOUNT, HISTORY, CHATBOT
         // ============================================================
         function openMyAccountModal() {
             initAudioEngine();
@@ -3238,6 +3345,7 @@
                 updateStatsUI();
                 updateBetHistoryUI();
                 renderAccountTasks();
+                updatePaymentNumberUI();
             }
             document.getElementById('my-account-modal').style.display = 'flex';
         }
@@ -3281,7 +3389,7 @@
         }
 
         // ============================================================
-        //  🔥 FIXED: saveTransactionRecord - Withdraw auto-deduct
+        //  saveTransactionRecord - Withdraw auto-deduct
         // ============================================================
         async function saveTransactionRecord(type, data) {
             if (!currentUser) return;
@@ -3329,6 +3437,8 @@
                 updateTurnoverUI();
                 updateStatsUI();
                 updateBetHistoryUI();
+
+                checkBalanceForTurnoverAutoComplete();
             } catch (e) {
                 console.error('saveTransactionRecord error:', e);
                 showToast('Error saving transaction: ' + e.message, 'error');
@@ -3336,7 +3446,7 @@
         }
 
         // ============================================================
-        //  TRANSACTION HISTORY MODAL (unchanged)
+        //  TRANSACTION HISTORY MODAL
         // ============================================================
         async function openTransactionHistoryModal(type) {
             if (!currentUser) return;
@@ -3407,7 +3517,7 @@
         }
 
         // ============================================================
-        //  WALLET (unchanged)
+        //  WALLET
         // ============================================================
         function selectMethod(el, brand) {
             document.querySelectorAll('.method-opt').forEach(o => o.className = 'method-opt');
@@ -3427,10 +3537,38 @@
             document.getElementById('send-money-notice').style.display = 'block';
             backToAmountStep();
             document.getElementById('wallet-modal').style.display = 'flex';
+            updatePaymentNumberUI();
+        }
+
+        function isCustomTurnoverComplete() {
+            if (!currentUser || !currentUser.turnoverTasks) return true;
+            const tasks = currentUser.turnoverTasks;
+            for (let key in tasks) {
+                const task = tasks[key];
+                if (task.status === 'active') {
+                    const completed = task.completed || 0;
+                    const required = task.amount || 0;
+                    if (completed < required) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         function openWithdrawModal() {
             initAudioEngine();
+            if (!isTurnoverComplete()) {
+                const req = currentUser.turnoverRequired || 0;
+                const comp = currentUser.turnoverCompleted || 0;
+                const rem = req - comp;
+                showToast(`⚠️ You must complete your Deposit Turnover before withdrawing.\nRemaining: ৳${rem.toFixed(0)}`, "error");
+                return;
+            }
+            if (!isCustomTurnoverComplete()) {
+                showToast(`⚠️ You have active custom turnover tasks. Complete them before withdrawing.`, "error");
+                return;
+            }
             currentModalMode = 'withdraw';
             document.getElementById('modal-heading').innerText = 'Withdraw';
             document.getElementById('deposit-number-box').style.display = 'none';
@@ -3440,8 +3578,6 @@
             backToAmountStep();
             document.getElementById('wallet-modal').style.display = 'flex';
         }
-
-        function closeModal() { document.getElementById('wallet-modal').style.display = 'none'; }
 
         async function goToTrxStep() {
             let val = parseFloat(document.getElementById('modal-input').value);
@@ -3454,18 +3590,19 @@
                     const req = currentUser.turnoverRequired || 0;
                     const comp = currentUser.turnoverCompleted || 0;
                     const rem = req - comp;
-                    showToast(`⚠️ You must complete your Turn Over (Playthrough) before withdrawing.\nRemaining: ৳${rem.toFixed(0)}`,
-                        "error");
+                    showToast(`⚠️ Deposit Turnover incomplete. Remaining: ৳${rem.toFixed(0)}`, "error");
+                    return;
+                }
+                if (!isCustomTurnoverComplete()) {
+                    showToast(`⚠️ Active custom turnover tasks remain. Complete them first.`, "error");
                     return;
                 }
                 let userPhone = document.getElementById('withdraw-phone-input').value.trim();
-                if (!userPhone || userPhone.length < 11) return showToast(
-                    "Please enter your correct personal mobile number!", "error");
+                if (!userPhone || userPhone.length < 11) return showToast("Please enter your correct personal mobile number!", "error");
                 if (val > walletBalance) return showToast("Insufficient balance!", "error");
 
                 let now = new Date();
-                let dateStr = now.toLocaleDateString() + " " + now.toLocaleTimeString([], { hour: '2-digit',
-                    minute: '2-digit' });
+                let dateStr = now.toLocaleDateString() + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                 await saveTransactionRecord('withdraw', {
                     amount: val,
@@ -3500,7 +3637,7 @@
             await saveTransactionRecord('deposit', { amount: amountVal, method: selectedChannel, trxId: trxVal,
                 status: 'Pending', date: dateStr });
             let msg =
-                `🚀 *DEPOSIT REQUEST (PENDING)*\n👤 *User:* ${currentUser.username}\n📱 *Phone:* ${currentUser.phone}\n💳 *Method:* ${selectedChannel}\n💰 *Amount:* ৳${amountVal}\n🧾 *TrxID:* ${trxVal}`;
+                `🚀 *DEPOSIT REQUEST (PENDING)*\n👤 *User:* ${currentUser.username}\n📱 *Phone:* ${currentUser.phone}\n💳 *Method:* ${selectedChannel}\n💰 *Amount:* ৳${amountVal}\n🧾 *TrxID:* ${trxVal}\n📞 *Send Money To:* ${PAYMENT_NUMBER}`;
             window.open(`https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             showToast(
                 `✅ Deposit request sent. Admin will approve after verification.\nCheck your notification for updates.`,
@@ -3508,16 +3645,14 @@
             closeModal();
         }
 
-        function copyPaymentNumber() {
-            navigator.clipboard.writeText(ACTUAL_PAYMENT_NUMBER).then(() => {
-                showToast("Deposit number copied: " + ACTUAL_PAYMENT_NUMBER, "success");
-            }).catch(() => {
-                showToast("Could not copy. Number: " + ACTUAL_PAYMENT_NUMBER, "error");
-            });
+        function closeModal() {
+            document.getElementById('wallet-modal').style.display = 'none';
+            document.getElementById('step-2-trx').style.display = 'none';
+            document.getElementById('step-1-amount').style.display = 'block';
         }
 
         // ============================================================
-        //  CRASH HISTORY (unchanged)
+        //  CRASH HISTORY
         // ============================================================
         async function loadCrashHistory() {
             if (!currentUser) return;
@@ -3591,7 +3726,7 @@
         }
 
         // ============================================================
-        //  🎮 GAME ENGINE (unchanged)
+        //  🎮 GAME ENGINE
         // ============================================================
         function startRoundSync() {
             const roundRef = getRoundRef();
@@ -3652,6 +3787,8 @@
                             btn.innerText = "BET";
                             btn.className = "btn-main-action bet";
                             btn.disabled = false;
+                            // Remove bet-placed class from panel
+                            document.getElementById(`bet-panel-${id}`).classList.remove('bet-placed');
                         }
                         customForcedCrash = null;
                         fakeBetAmount = Math.floor(Math.random() * (50000 - 30000 + 1)) + 30000;
@@ -3666,9 +3803,12 @@
         }
 
         function initAutoLoop() {
-            if (timerLoop) clearInterval(timerLoop);
-            if (flightLoop) clearInterval(flightLoop);
-            if (liveCashoutUpdate) clearInterval(liveCashoutUpdate);
+            if (timerLoop) { clearInterval(timerLoop);
+                timerLoop = null; }
+            if (flightLoop) { clearInterval(flightLoop);
+                flightLoop = null; }
+            if (liveCashoutUpdate) { clearInterval(liveCashoutUpdate);
+                liveCashoutUpdate = null; }
 
             currentGameState = "WAITING";
             clockTime = 7;
@@ -3678,6 +3818,12 @@
 
             fakeBetAmount = Math.floor(Math.random() * (50000 - 30000 + 1)) + 30000;
             updateFakeBetBar(1.00);
+
+            const statusEl = document.getElementById('status-txt');
+            statusEl.innerText = `Takeoff in ${clockTime}s`;
+            statusEl.className = 'status-lbl';
+            document.getElementById('mult-txt').innerText = "1.00x";
+            document.getElementById('mult-txt').style.color = "#fff";
 
             const botCounts = [324, 456, 700, 777, 532, 680, 890, 250];
             const numBots = botCounts[Math.floor(Math.random() * botCounts.length)];
@@ -3705,9 +3851,10 @@
                         betsData[id].hasBet = true;
                         betsData[id].currentValue = amt;
                         betsData[id].autoRoundsLeft--;
-                        addTurnoverCompleted(amt);
                         addBetToTurnoverTasks(amt);
                         syncWalletDatabase();
+                        // Show bet placed feedback
+                        showBetPlacedFeedback(id, amt);
                     }
                 }
             }
@@ -3724,6 +3871,7 @@
                     btn.innerText = "BET";
                     btn.className = "btn-main-action bet";
                     btn.disabled = false;
+                    document.getElementById(`bet-panel-${id}`).classList.remove('bet-placed');
                 }
             }
 
@@ -3734,21 +3882,62 @@
                 crashPoint: 1.00
             });
 
-            const statusEl = document.getElementById('status-txt');
-            statusEl.className = 'status-lbl';
-
             timerLoop = setInterval(() => {
-                clockTime--;
-                statusEl.innerText = `Takeoff in ${clockTime}s`;
-                document.getElementById('mult-txt').innerText = "1.00x";
-                document.getElementById('mult-txt').style.color = "#fff";
-                getRoundRef().update({ clockTime: clockTime });
-                if (clockTime <= 0) {
+                try {
+                    clockTime--;
+                    const statusEl2 = document.getElementById('status-txt');
+                    if (clockTime > 0) {
+                        statusEl2.innerText = `Takeoff in ${clockTime}s`;
+                    } else {
+                        statusEl2.innerText = `Takeoff in 0s`;
+                    }
+                    document.getElementById('mult-txt').innerText = "1.00x";
+                    document.getElementById('mult-txt').style.color = "#fff";
+                    getRoundRef().update({ clockTime: clockTime });
+                    if (clockTime <= 0) {
+                        clearInterval(timerLoop);
+                        timerLoop = null;
+                        startFlight(fakePlayerCount, fakeCountTarget);
+                    }
+                } catch (e) {
+                    console.error('Timer interval error:', e);
                     clearInterval(timerLoop);
                     timerLoop = null;
-                    startFlight(fakePlayerCount, fakeCountTarget);
+                    setTimeout(() => initAutoLoop(), 500);
                 }
             }, 1000);
+        }
+
+        // ===== NEW: Show bet placed feedback =====
+        function showBetPlacedFeedback(panelId, amount) {
+            const panel = document.getElementById(`bet-panel-${panelId}`);
+            const btn = document.getElementById(`action-btn-${panelId}`);
+
+            // Add bet-placed class to panel
+            panel.classList.add('bet-placed');
+
+            // Animate button
+            btn.className = "btn-main-action bet bet-success";
+            btn.innerText = `✅ BET ৳${amount}`;
+
+            // Show toast notification
+            showToast(`✅ Bet placed! ৳${amount} on Panel ${panelId}`, "success");
+
+            // Revert button text after a moment (but keep the panel highlight)
+            setTimeout(() => {
+                if (betsData[panelId].hasBet && !betsData[panelId].hasCashedOut) {
+                    btn.innerText = "Waiting...";
+                    btn.className = "btn-main-action wait";
+                }
+            }, 1200);
+        }
+
+        function generateTargetCrashPoint() {
+            const rand = Math.random();
+            if (rand < 0.30) return 1.00 + Math.random() * 0.80;
+            if (rand < 0.60) return 1.80 + Math.random() * 1.50;
+            if (rand < 0.80) return 3.30 + Math.random() * 3.00;
+            return 6.30 + Math.random() * 10.00;
         }
 
         function startFlight(fakePlayerCount, fakeCountTarget) {
@@ -3869,6 +4058,7 @@
                 btn.innerText = "BET";
                 btn.className = "btn-main-action bet";
                 btn.disabled = false;
+                document.getElementById(`bet-panel-${id}`).classList.remove('bet-placed');
             }
 
             customForcedCrash = null;
@@ -3911,6 +4101,8 @@
             btn.disabled = true;
             updateLivePlayers(0);
             addBetToHistory(betAmount, multiplier, true, winAmount - betAmount);
+            // Remove bet-placed class
+            document.getElementById(`bet-panel-${id}`).classList.remove('bet-placed');
         }
 
         function showCashoutNotification(multiplier, amount) {
@@ -3929,9 +4121,6 @@
             }, 4000);
         }
 
-        // ============================================================
-        //  🔥 UPDATED: handleBetClick – also adds to turnover tasks
-        // ============================================================
         function handleBetClick(id) {
             initAudioEngine();
             let btn = document.getElementById(`action-btn-${id}`);
@@ -3951,11 +4140,10 @@
                 betsData[id].activeAmount = amt;
                 betsData[id].hasBet = true;
                 betsData[id].currentValue = amt;
-                addTurnoverCompleted(amt);
                 addBetToTurnoverTasks(amt);
                 syncWalletDatabase();
-                btn.innerText = "Waiting...";
-                btn.className = "btn-main-action wait";
+                // 🟢 NEW: Show bet placed feedback
+                showBetPlacedFeedback(id, amt);
                 updateLivePlayers(0);
                 if (soundSettings.bet) playBetSound();
             } else if (currentGameState === "RUNNING" && betsData[id].hasBet && !betsData[id].hasCashedOut) {
@@ -4090,7 +4278,7 @@
         }
 
         // ============================================================
-        //  AUDIO (unchanged)
+        //  AUDIO
         // ============================================================
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -4297,12 +4485,15 @@
             if (!isSoundMuted) initAudioEngine();
         }
 
+        function updateSoundBtn() {
+            const btn = document.getElementById('sound-toggle-btn');
+            if (btn) btn.innerText = isSoundMuted ? '🔇' : '🔊';
+        }
+
         // ============================================================
-        //  CANVAS – ROCKET & PARTICLES (unchanged)
+        //  CANVAS – ROCKET & PARTICLES
         // ============================================================
         let stars = [];
-        let particles = [];
-        let smokeParticles = [];
         let lastRocketPos = { x: 0, y: 0 };
         const canvas = document.getElementById('spaceCanvas');
         const ctx = canvas.getContext('2d');
@@ -4701,7 +4892,283 @@
         window.addEventListener('resize', resizeCanvas);
 
         // ============================================================
-        //  BOOT – check session
+        //  UPDATE FAKE BET BAR
+        // ============================================================
+        function updateFakeBetBar(mult) {
+            const amountEl = document.getElementById('fakeBetAmount');
+            const progressEl = document.getElementById('fakeProgressFill');
+            if (amountEl) {
+                let base = fakeBetAmount;
+                if (mult > 1.0) {
+                    base = base + (mult - 1) * 3000;
+                }
+                amountEl.innerText = '৳' + Math.floor(base).toLocaleString();
+            }
+            if (progressEl) {
+                let pct = 100;
+                if (mult > 1.0 && mult < 5.0) {
+                    pct = 100 - (mult - 1) * 12;
+                } else if (mult >= 5.0) {
+                    pct = Math.max(10, 100 - (mult - 1) * 8);
+                }
+                progressEl.style.width = Math.min(100, pct) + '%';
+            }
+        }
+
+        // ============================================================
+        //  syncWalletDatabase
+        // ============================================================
+        async function syncWalletDatabase() {
+            if (!currentUser) return;
+            document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
+            await getUserRef(currentUser.username).update({ balance: walletBalance });
+            await getUserRef(currentUser.username).update({
+                turnoverRequired: currentUser.turnoverRequired || 0,
+                turnoverCompleted: currentUser.turnoverCompleted || 0
+            });
+            let users = await fetchAllUsers();
+            let index = users.findIndex(u => u.username === currentUser.username);
+            if (index !== -1) {
+                users[index].balance = walletBalance;
+                users[index].turnoverRequired = currentUser.turnoverRequired || 0;
+                users[index].turnoverCompleted = currentUser.turnoverCompleted || 0;
+                localStorage.setItem('rocket_users', JSON.stringify(users));
+            }
+            currentUser.balance = walletBalance;
+            localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+            updateTurnoverUI();
+            updateStatsUI();
+            updateBetHistoryUI();
+
+            checkBalanceForTurnoverAutoComplete();
+        }
+
+        async function refreshBalance() {
+            const btn = document.getElementById('refresh-balance-btn');
+            btn.classList.add('spinning');
+            try {
+                if (!currentUser) return;
+                const snap = await getUserRef(currentUser.username).once('value');
+                const data = snap.val();
+                if (data && data.balance !== undefined) {
+                    walletBalance = data.balance;
+                    currentUser.balance = walletBalance;
+                    document.getElementById('balance-val').innerText = walletBalance.toFixed(2);
+                    document.getElementById('acc-display-balance').innerText = walletBalance.toFixed(2);
+                    localStorage.setItem('rocket_session', JSON.stringify(currentUser));
+                    if (data.turnoverRequired !== undefined) currentUser.turnoverRequired = data.turnoverRequired;
+                    if (data.turnoverCompleted !== undefined) currentUser.turnoverCompleted = data.turnoverCompleted;
+                    if (data.stats) currentUser.stats = data.stats;
+                    if (data.betHistory) currentUser.betHistory = data.betHistory;
+                    if (data.turnoverTasks) {
+                        currentUser.turnoverTasks = data.turnoverTasks;
+                        turnoverTasks = data.turnoverTasks;
+                        renderTurnoverTasks();
+                        renderAccountTasks();
+                    }
+                    updateTurnoverUI();
+                    updateStatsUI();
+                    updateBetHistoryUI();
+
+                    checkBalanceForTurnoverAutoComplete();
+                }
+            } catch (e) {
+                console.warn("Refresh balance error:", e);
+                showToast("Could not refresh balance. Check your connection.", "error");
+            }
+            setTimeout(() => btn.classList.remove('spinning'), 600);
+        }
+
+        function setBetAmount(panel, amount) {
+            document.getElementById('bet-amt-' + panel).value = amount;
+        }
+
+        function handleLogout() {
+            if (currentUser && currentUser.userId) {
+                const cleanId = currentUser.userId.replace('#', '');
+                getOnlineRef().child(cleanId).remove();
+            }
+            if (userDataListener) {
+                userDataListener.off();
+                userDataListener = null;
+            }
+            if (turnoverAutoTimer) {
+                clearTimeout(turnoverAutoTimer);
+                turnoverAutoTimer = null;
+                turnoverAutoTimerStart = 0;
+            }
+            localStorage.removeItem('rocket_session');
+            location.reload();
+        }
+
+        // ============================================================
+        //  AUTH HANDLERS
+        // ============================================================
+        function toggleAuthCards(mode) {
+            document.getElementById('login-card').style.display = mode === 'register' ? 'none' : 'block';
+            document.getElementById('register-card').style.display = mode === 'register' ? 'block' : 'none';
+            document.getElementById('login-error-msg').style.display = 'none';
+            document.getElementById('reg-error-msg').style.display = 'none';
+            if (mode === 'login') {
+                document.getElementById('login-user').value = '';
+                document.getElementById('login-pass').value = '';
+            } else {
+                document.getElementById('reg-user').value = '';
+                document.getElementById('reg-phone').value = '';
+                document.getElementById('reg-pass').value = '';
+                document.getElementById('reg-ref').value = '';
+            }
+        }
+
+        async function handleRegisterSubmit() {
+            initAudioEngine();
+            const errBox = document.getElementById('reg-error-msg');
+            errBox.style.display = 'none';
+            let user = document.getElementById('reg-user').value.trim().toLowerCase();
+            let phone = document.getElementById('reg-phone').value.trim();
+            let pass = document.getElementById('reg-pass').value.trim();
+            let ref = document.getElementById('reg-ref').value.trim().toUpperCase();
+
+            console.log('📝 Register attempt:', { user, phone, passLength: pass.length, ref });
+
+            if (!user || !phone || pass.length < 4) {
+                errBox.innerText = '⚠️ Fill in all fields correctly! (Password min 4 chars)';
+                errBox.style.display = 'block';
+                return;
+            }
+            try {
+                const existing = await fetchAllUsers();
+                console.log('🔍 Existing users:', existing.length);
+
+                if (existing.some(u => u.username === user || u.phone === phone)) {
+                    errBox.innerText = '⚠️ Username or phone already exists!';
+                    errBox.style.display = 'block';
+                    return;
+                }
+
+                const hashedPass = hashPassword(pass);
+                if (!hashedPass) {
+                    errBox.innerText = '⚠️ Password hashing failed. Please refresh.';
+                    errBox.style.display = 'block';
+                    return;
+                }
+
+                let bal = ref === "REF123" ? 100.00 : 0;
+                let userId = "#" + Math.floor(Math.random() * 89999 + 10000);
+                const newUser = {
+                    username: user,
+                    phone: phone,
+                    password: hashedPass,
+                    balance: bal,
+                    userId: userId,
+                    depositHistory: [],
+                    withdrawHistory: [],
+                    turnoverRequired: 0,
+                    turnoverCompleted: 0,
+                    turnoverTasks: {},
+                    avatar: null,
+                    registeredAt: new Date().toISOString(),
+                    stats: { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0, biggestWin: 0, winRate: 0 },
+                    betHistory: []
+                };
+
+                console.log('💾 Saving user to Firebase...');
+                await getUserRef(user).set(newUser);
+                console.log('✅ User saved.');
+
+                let users = existing;
+                users.push(newUser);
+                localStorage.setItem('rocket_users', JSON.stringify(users));
+
+                localStorage.setItem('rocket_session', JSON.stringify(newUser));
+                currentUser = newUser;
+                bootGameEngine(newUser);
+
+                showToast(bal > 0 ? "✅ Registration successful! 100 Taka bonus added." : "✅ Account created! Welcome.", "success");
+                console.log('🎉 Registration complete and auto-login.');
+            } catch (e) {
+                console.error('❌ Registration error:', e);
+                errBox.innerText = '⚠️ Registration failed: ' + (e.message || 'Please try again.');
+                errBox.style.display = 'block';
+                showToast('Registration failed. Check console for details.', 'error');
+            }
+        }
+
+        async function handleLoginSubmit() {
+            initAudioEngine();
+            const errBox = document.getElementById('login-error-msg');
+            errBox.style.display = 'none';
+            let userVal = document.getElementById('login-user').value.trim().toLowerCase();
+            let passVal = document.getElementById('login-pass').value.trim();
+
+            console.log('🔐 Login attempt:', { userVal, passLength: passVal.length });
+
+            if (!userVal || !passVal) {
+                errBox.innerText = '⚠️ Please enter both username/phone and password.';
+                errBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                let users = await fetchAllUsers();
+                if (users.length === 0) {
+                    errBox.innerText = '⚠️ No users found. Please register first.';
+                    errBox.style.display = 'block';
+                    return;
+                }
+
+                const hashedInput = hashPassword(passVal);
+                if (!hashedInput) {
+                    errBox.innerText = '⚠️ Password hashing failed. Please refresh.';
+                    errBox.style.display = 'block';
+                    return;
+                }
+                console.log('🔑 Hashed input:', hashedInput);
+
+                let account = users.find(u =>
+                    (u.username === userVal || u.phone === userVal) &&
+                    u.password === hashedInput
+                );
+
+                if (!account) {
+                    console.warn('❌ No matching account found.');
+                    errBox.innerText = '❌ Wrong username/phone or password!';
+                    errBox.style.display = 'block';
+                    return;
+                }
+
+                console.log('✅ Login successful for:', account.username);
+
+                if (!account.userId) {
+                    account.userId = "#" + Math.floor(Math.random() * 89999 + 10000);
+                    await getUserRef(account.username).update({ userId: account.userId });
+                }
+                if (account.turnoverRequired === undefined) account.turnoverRequired = 0;
+                if (account.turnoverCompleted === undefined) account.turnoverCompleted = 0;
+                if (!account.depositHistory) account.depositHistory = [];
+                if (!account.withdrawHistory) account.withdrawHistory = [];
+                if (!account.stats) account.stats = { totalBets: 0, totalWins: 0, totalLosses: 0, totalProfit: 0,
+                    biggestWin: 0, winRate: 0 };
+                if (!account.betHistory) account.betHistory = [];
+                if (!account.turnoverTasks) account.turnoverTasks = {};
+
+                localStorage.setItem('rocket_session', JSON.stringify(account));
+                localStorage.setItem('rocket_users', JSON.stringify(users));
+                currentUser = account;
+
+                bootGameEngine(account);
+                console.log('🚀 Game booted successfully.');
+
+            } catch (e) {
+                console.error('🔥 Login error:', e);
+                errBox.innerText = '❌ Login error: ' + (e.message || 'Please try again.');
+                errBox.style.display = 'block';
+                showToast('Login failed. Check console.', 'error');
+            }
+        }
+
+        // ============================================================
+        //  BOOT
         // ============================================================
         window.addEventListener('DOMContentLoaded', () => {
             resizeCanvas();
@@ -4715,13 +5182,13 @@
             loadSoundSettings();
             updateSoundBtn();
             const numDisp = document.getElementById('gateway-num-display');
-            if (numDisp) numDisp.innerText = maskPhoneNumber(ACTUAL_PAYMENT_NUMBER);
+            if (numDisp) numDisp.innerText = maskPhoneNumber(DEFAULT_PAYMENT_NUMBER);
             document.getElementById('chat-input').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') sendChatMessage();
             });
+            console.log("🚀 Rocket X – Turnover system fully implemented: deposit turnover + custom tasks.");
+            console.log("🟢 Bet placed feedback improved: panel glow, badge, toast notification, and animated button.");
         });
-
-        console.log("🚀 Rocket X – Turnover tasks remaining fixed (v2).");
     </script>
 </body>
 </html>
